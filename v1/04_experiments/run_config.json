@@ -1,0 +1,76 @@
+{
+  "cap_usd": 150.0,
+  "worst_case_call_usd": 3.0,
+  "prices_verified": {
+    "date": "2026-09-01",
+    "anthropic_source": "https://platform.claude.com/docs/en/about-claude/pricing",
+    "openai_source": "https://developers.openai.com/api/docs/pricing",
+    "note": "Cache-read multiplier 0.1x on Anthropic (explicit per-MTok cache-read prices below); 5m cache writes 1.25x input, folded into estimate_cost_usd."
+  },
+  "temperature_note": "The 2026 frontier APIs selected here removed the temperature parameter (Anthropic Claude 5 family) or may reject it (OpenAI reasoning models). send_temperature=false records this; run-to-run nondeterminism is measured via k=5 repeats per STUDY_PROTOCOL amendment A2.",
+  "models": {
+    "opus5": {
+      "provider": "anthropic",
+      "id": "claude-opus-5",
+      "tier": "frontier",
+      "send_temperature": false,
+      "price_in_per_mtok": 5.0,
+      "price_out_per_mtok": 25.0,
+      "price_cache_read_per_mtok": 0.5
+    },
+    "sonnet5": {
+      "provider": "anthropic",
+      "id": "claude-sonnet-5",
+      "tier": "mid",
+      "send_temperature": false,
+      "price_in_per_mtok": 2.0,
+      "price_out_per_mtok": 10.0,
+      "price_cache_read_per_mtok": 0.2
+    },
+    "gpt56terra": {
+      "provider": "openai",
+      "id": "gpt-5.6-terra",
+      "tier": "mid",
+      "send_temperature": false,
+      "send_seed": false,
+      "price_in_per_mtok": 2.0,
+      "price_out_per_mtok": 12.0,
+      "price_cache_read_per_mtok": 0.2
+    },
+    "gpt56luna": {
+      "provider": "openai",
+      "id": "gpt-5.6-luna",
+      "tier": "small",
+      "send_temperature": false,
+      "send_seed": false,
+      "price_in_per_mtok": 0.2,
+      "price_out_per_mtok": 1.2,
+      "price_cache_read_per_mtok": 0.02
+    },
+    "mockref": {
+      "provider": "mock_reference",
+      "id": "mock-reference",
+      "tier": "test",
+      "price_in_per_mtok": 0,
+      "price_out_per_mtok": 0
+    },
+    "mockbad": {
+      "provider": "mock_garbage",
+      "id": "mock-garbage",
+      "tier": "test",
+      "price_in_per_mtok": 0,
+      "price_out_per_mtok": 0
+    },
+    "gpt56sol": {
+      "provider": "openai",
+      "id": "gpt-5.6-sol",
+      "tier": "frontier",
+      "send_temperature": false,
+      "send_seed": false,
+      "price_in_per_mtok": 4.0,
+      "price_out_per_mtok": 20.0,
+      "price_cache_read_per_mtok": 0.4
+    }
+  },
+  "slate_rationale": "Amendment A3: only an OpenAI key is available (no Anthropic key on this machine), so the executable slate is OpenAI-only, three tiers: gpt-5.6-sol (frontier), gpt-5.6-terra (mid), gpt-5.6-luna (small). This is a single-provider deviation from protocol \u00a74's two-provider rule, disclosed in the manuscript; it does satisfy A1's non-authoring-vendor requirement (the benchmark was authored with Claude assistance; no Anthropic model is evaluated). Model IDs verified available via models.list on 2026-09-01 (no dated 5.6 snapshots exist; each response's resolved model string is recorded per call)."
+}

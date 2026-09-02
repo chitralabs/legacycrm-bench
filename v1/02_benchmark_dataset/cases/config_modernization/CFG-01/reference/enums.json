@@ -1,0 +1,10 @@
+{
+  "ACCT_MASTER.ACCT_TYP": {"C": "Customer", "P": "Prospect", "R": "Partner", "X": "Inactive"},
+  "CONT_MASTER.PREF_CH": {"E": "email", "P": "phone", "M": "mail"},
+  "OPP_MASTER.STAT_CD": {"P": "Prospecting", "Q": "Qualified", "N": "Negotiation", "W": "Closed-Won", "L": "Closed-Lost"},
+  "OPP_MASTER.LOST_RSN": {"PR": "price", "CM": "competitor", "NB": "no budget", "TM": "timing", "OT": "other"},
+  "CASE_MASTER.SEV_CD": {"1": "Critical", "2": "High", "3": "Normal", "4": "Low"},
+  "CASE_MASTER.STAT_CD": {"N": "New", "A": "Assigned", "P": "Pending-Customer", "R": "Resolved", "X": "Closed"},
+  "ORD_HEADER.STAT_CD": {"E": "Entered", "A": "Approved", "S": "Shipped", "I": "Invoiced", "X": "Cancelled"},
+  "ACT_LOG.ACT_TYP": {"C": "Call", "E": "Email", "M": "Meeting", "K": "Task"}
+}

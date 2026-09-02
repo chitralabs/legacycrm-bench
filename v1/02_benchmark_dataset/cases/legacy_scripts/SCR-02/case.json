@@ -1,0 +1,17 @@
+{
+  "id": "SCR-02",
+  "title": "Migrate the credit_hold_sweep CRMScript with its 80% release hysteresis",
+  "category": "legacy_scripts",
+  "difficulty": "medium",
+  "source_artifacts": ["legacy/credit_hold_sweep.crms", "legacy/SEMANTICS_EXCERPT.md"],
+  "target_requirement": "Reimplement the nightly credit-hold sweep as a Python module exposing sweep(accounts, orders) -> (accounts, audits): exposure is the sum of NVL(TOT_AMT,0) over live invoiced (STAT_CD='I') orders per account; hold when exposure > NVL(CRED_LIMIT,0); release only when exposure <= 80% of the limit; only live ACCT_TYP='C' accounts participate, processed in ascending ACCT_ID order; audits are (CRED_HOLD_ON/CRED_HOLD_OFF, acct_id) tuples.",
+  "expected_behavior": "Exposure above the limit sets CRED_HOLD='Y' with a CRED_HOLD_ON audit; between 80% and 100% of the limit nothing changes in either direction (hysteresis); at or below 80% a held account is released with CRED_HOLD_OFF; exposure exactly at the limit does not hold; non-invoiced, soft-deleted and other-account orders never count; no audit is emitted for unchanged accounts; inputs are never mutated.",
+  "deliverables": ["migrated.py"],
+  "dependencies": {"python": ">=3.10", "packages": []},
+  "provenance": "Synthetic; authored for LegacyCRM-Bench from Meridian CRM 4.2 spec (SYSTEM_OVERVIEW.md §4) and scripts/credit_hold_sweep.crms.",
+  "license": "Code: MIT; data/specs: CC BY 4.0",
+  "ground_truth_derivation": "GROUND_TRUTH.md",
+  "security_expectations": "No network access; the module must not import network or subprocess modules; the sweep must not widen holds to non-customer or soft-deleted accounts.",
+  "failure_conditions": "Releasing anywhere inside the 80%-100% band or holding at exposure == limit (hysteresis collapsed to a single threshold); counting non-invoiced or soft-deleted orders; duplicate audits for unchanged accounts; audits not in ascending ACCT_ID order; mutating inputs.",
+  "num_tests": 17
+}

@@ -1,0 +1,17 @@
+{
+  "id": "BIZ-02",
+  "title": "Preserve the discount authorization policy (ORD-001/ORD-002) with LOOKUP role semantics",
+  "category": "business_rules",
+  "difficulty": "medium",
+  "source_artifacts": ["legacy/order_rules.vrl", "legacy/SEMANTICS_EXCERPT.md"],
+  "target_requirement": "Deliver migrated.py with set_discount(order, pct, user_id, users) -> order and a BusinessRuleViolation exception: range check 0..100 inclusive first (E5001), then discounts strictly over 20 require the acting user's looked-up ROLE_ID to be MGR or ADMIN (E5002), where LOOKUP sees live USR_MASTER rows only so unknown and soft-deleted users have no role; success returns a new order with DISC_PCT set.",
+  "expected_behavior": "Exactly 20 needs no role while 20.01 requires MGR/ADMIN; unknown or soft-deleted users cannot authorize over-20 discounts but may set 20; inactive-but-live managers still authorize (ACTIVE_FLG is not consulted); -0.01 and 100.01 raise E5001 while 100 is allowed; out-of-range reports E5001 even when the role check would also fail; legacy messages preserved; inputs never mutated.",
+  "deliverables": ["migrated.py"],
+  "dependencies": {"python": ">=3.10", "packages": []},
+  "provenance": "Synthetic; authored for LegacyCRM-Bench from Meridian CRM 4.2 spec (SYSTEM_OVERVIEW.md §1, §2).",
+  "license": "Code: MIT; data/specs: CC BY 4.0",
+  "ground_truth_derivation": "GROUND_TRUTH.md",
+  "security_expectations": "No privilege widening: an unknown, soft-deleted, or role-less user must never authorize a discount over 20 percent; no network or subprocess imports.",
+  "failure_conditions": "Treating 20 as requiring a role or 20.01 as not; letting deleted/unknown users authorize; consulting ACTIVE_FLG in the lookup; swapping E5001/E5002 precedence; mutating inputs.",
+  "num_tests": 14
+}

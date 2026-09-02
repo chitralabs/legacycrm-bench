@@ -1,0 +1,17 @@
+{
+  "id": "BAT-03",
+  "title": "Migrate the dw_export chunked transmission loop (500-record batches)",
+  "category": "batch_processing",
+  "difficulty": "hard",
+  "source_artifacts": ["legacy/dw_export.crms", "legacy/SEMANTICS_EXCERPT.md"],
+  "target_requirement": "Reimplement the dw_export batching loop as a Python module exposing export_chunks(rows, send) -> int: accumulate formatted records in order, transmit via the injected send() in chunks of exactly 500 with each record followed by one newline (trailing newline included), send the final partial chunk iff non-empty, and return the total records sent.",
+  "expected_behavior": "0 rows: send never called; 1-500 rows: exactly one call; 501-1000 rows: exactly two calls with the first carrying rows 0-499; exactly 500 or 1000 rows produce no extra empty call; every payload equals ''.join(rec+'\\n') for its chunk; concatenated chunks reproduce the input order; return value equals len(rows).",
+  "deliverables": ["migrated.py"],
+  "dependencies": {"python": ">=3.10", "packages": []},
+  "provenance": "Synthetic; authored for LegacyCRM-Bench from Meridian CRM 4.2 spec (SYSTEM_OVERVIEW.md §4, §7) and scripts/dw_export.crms.",
+  "license": "Code: MIT; data/specs: CC BY 4.0",
+  "ground_truth_derivation": "GROUND_TRUTH.md",
+  "security_expectations": "No network access: transmission happens only through the injected send callable; the module must not import network or subprocess modules.",
+  "failure_conditions": "Sending an empty payload after a boundary-aligned row count (500/1000); off-by-one chunk boundaries; dropping the trailing newline or joining without per-record newlines; reordering records; calling any real HTTP endpoint.",
+  "num_tests": 13
+}

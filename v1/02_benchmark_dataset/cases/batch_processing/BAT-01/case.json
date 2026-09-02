@@ -1,0 +1,17 @@
+{
+  "id": "BAT-01",
+  "title": "Migrate batch_jobs.cfg to a modern schedule.json with default-ABORT semantics",
+  "category": "batch_processing",
+  "difficulty": "easy",
+  "source_artifacts": ["legacy/batch_jobs.cfg", "legacy/SEMANTICS_EXCERPT.md"],
+  "target_requirement": "Convert the legacy nightly batch schedule to schedule.json (one {name, at, script, on_error:{policy, retries}} object per JOB line, preserving file order, integer retries) and deliver the parse_schedule(cfg_text) function that produced it, defaulting an absent ON_ERROR clause to ABORT per the sequential-chain semantics of SYSTEM_OVERVIEW.md §7.",
+  "expected_behavior": "schedule.json contains exactly the five legacy jobs in file order with their times, scripts, and ON_ERROR policies (CONTINUE/ABORT/RETRY:2/CONTINUE/RETRY:1, retries as integers); parse_schedule skips comment and blank lines, defaults a missing ON_ERROR clause to {policy ABORT, retries 0}, and reproduces schedule.json exactly from the shipped cfg.",
+  "deliverables": ["migrated.py", "schedule.json"],
+  "dependencies": {"python": ">=3.10", "packages": []},
+  "provenance": "Synthetic; authored for LegacyCRM-Bench from Meridian CRM 4.2 spec (SYSTEM_OVERVIEW.md §7) and batch_jobs.cfg.",
+  "license": "Code: MIT; data/specs: CC BY 4.0",
+  "ground_truth_derivation": "GROUND_TRUTH.md",
+  "security_expectations": "No network access; migrated.py performs no file or network I/O (text passed in); no credential material in deliverables.",
+  "failure_conditions": "Reordering, inventing, dropping, or duplicating jobs; string-typed retries; defaulting an absent ON_ERROR clause to CONTINUE or RETRY (silently weakening the sequential chain); schedule.json diverging from parse_schedule of the shipped cfg.",
+  "num_tests": 13
+}

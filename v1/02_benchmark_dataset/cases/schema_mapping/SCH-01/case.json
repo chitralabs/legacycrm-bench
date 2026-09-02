@@ -1,0 +1,17 @@
+{
+  "id": "SCH-01",
+  "title": "Map legacy ACCT_MASTER rows to the modern account record shape",
+  "category": "schema_mapping",
+  "difficulty": "easy",
+  "source_artifacts": ["legacy/acct_master.sql", "legacy/data_dictionary_excerpt.csv", "legacy/SEMANTICS_EXCERPT.md"],
+  "target_requirement": "Deliver migrated.py exposing convert_account(row: dict) -> dict | None that maps one legacy ACCT_MASTER row (all string values) to the modern account shape per the exact 13-key mapping table in target_spec.md: snake_case key rename, YYYYMMDD sentinel dates to None or ISO YYYY-MM-DD, CHAR(1) Y/N to bool (blank=N), blank CURR_CD to USD, NUMBER strings to float (blank=0.0), and None for soft-deleted rows.",
+  "expected_behavior": "convert_account returns None for DEL_FLG='Y'; otherwise a dict with exactly the 13 modern keys and converted values: '00000000' dates become None, other dates become ISO strings, CRED_HOLD 'Y' becomes True and 'N'/blank False, blank CURR_CD becomes 'USD', numeric strings become floats with blank coercing to 0.0, and no legacy column name appears in the output.",
+  "deliverables": ["migrated.py"],
+  "dependencies": {"python": ">=3.10", "packages": []},
+  "provenance": "Synthetic; authored for LegacyCRM-Bench from Meridian CRM 4.2 spec (SYSTEM_OVERVIEW.md §1).",
+  "license": "Code: MIT; data/specs: CC BY 4.0",
+  "ground_truth_derivation": "GROUND_TRUTH.md",
+  "security_expectations": "No network access; module must not import network or subprocess modules.",
+  "failure_conditions": "Leaking legacy column names into the output; treating the 00000000 sentinel as a real date; emitting soft-deleted rows; defaulting blank booleans to True; nondeterminism or I/O.",
+  "num_tests": 14
+}

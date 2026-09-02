@@ -1,0 +1,17 @@
+' Meridian CRM 4.2 nightly order-total recompute (synthetic legacy artifact)
+' Recomputes ORD_LINE.EXT_AMT and ORD_HEADER.TOT_AMT (after header discount), rounding half-up to cents.
+FOR EACH ord IN ORD_HEADER WHERE DEL_FLG = 'N' AND STAT_CD <> 'X'
+  LET total = 0
+  FOR EACH line IN ORD_LINE WHERE ORD_ID = ord.ORD_ID AND DEL_FLG = 'N'
+    LET ext = NVL(line.QTY, 0) * NVL(line.UNIT_PRC, 0)
+    IF line.EXT_AMT <> ext THEN
+      UPDATE line SET EXT_AMT = ext
+    END IF
+    LET total = total + ext
+  NEXT
+  LET discounted = total * (100 - NVL(ord.DISC_PCT, 0)) / 100
+  IF ord.TOT_AMT <> discounted THEN
+    UPDATE ord SET TOT_AMT = discounted
+    CALL AUDIT('ORD_RETOTAL', ord.ORD_ID)
+  END IF
+NEXT

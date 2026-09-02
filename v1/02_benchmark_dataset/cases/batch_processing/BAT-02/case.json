@@ -1,0 +1,17 @@
+{
+  "id": "BAT-02",
+  "title": "Migrate the batch runner's ABORT/CONTINUE/RETRY error semantics",
+  "category": "batch_processing",
+  "difficulty": "medium",
+  "source_artifacts": ["legacy/batch_jobs.cfg", "legacy/SEMANTICS_EXCERPT.md"],
+  "target_requirement": "Reimplement the legacy sequential batch runner as a Python module exposing run_jobs(jobs, executor) -> log, where the injected executor raises on failure: jobs run strictly in list order; ABORT stops the whole schedule; CONTINUE logs BATCH_ROWSKIP and proceeds; RETRY:n re-invokes up to n additional times (n+1 total) and aborts the schedule if still failing; the log records exact attempt counts and outcomes per attempted job.",
+  "expected_behavior": "run_jobs returns one {name, attempts, outcome ok|skip|abort, audits} entry per attempted job in order; after an abort no later job is executed or logged; a CONTINUE failure carries audits ['BATCH_ROWSKIP'] and the next job still runs; a RETRY:2 job failing twice then succeeding logs attempts 3 outcome ok; attempts always equals the executor invocation count; job exceptions never propagate out of the runner.",
+  "deliverables": ["migrated.py"],
+  "dependencies": {"python": ">=3.10", "packages": []},
+  "provenance": "Synthetic; authored for LegacyCRM-Bench from Meridian CRM 4.2 spec (SYSTEM_OVERVIEW.md §7) and batch_jobs.cfg.",
+  "license": "Code: MIT; data/specs: CC BY 4.0",
+  "ground_truth_derivation": "GROUND_TRUTH.md",
+  "security_expectations": "No network access; the runner must not import network or subprocess modules and must not sleep (retries are immediate and deterministic).",
+  "failure_conditions": "Executing jobs after an abort; retrying more or fewer than n additional times; logging BATCH_ROWSKIP for successful or aborted jobs; letting executor exceptions propagate; reordering jobs; wall-clock dependence.",
+  "num_tests": 13
+}

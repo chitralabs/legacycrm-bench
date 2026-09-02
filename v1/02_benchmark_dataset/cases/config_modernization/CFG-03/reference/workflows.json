@@ -1,0 +1,102 @@
+{
+  "workflows": [
+    {
+      "name": "opportunity_pipeline",
+      "entity": "OPP_MASTER",
+      "state_field": "STAT_CD",
+      "states": [
+        {"code": "P", "initial": true, "timers": []},
+        {"code": "Q", "initial": false, "timers": []},
+        {"code": "N", "initial": false, "timers": []},
+        {"code": "W", "initial": false, "timers": []},
+        {"code": "L", "initial": false, "timers": []}
+      ],
+      "transitions": [
+        {"from": "P", "to": "Q", "event": "qualify", "guard": "NVL(AMT,0) > 0",
+         "actions": [{"type": "set", "field": "STAGE_PCT", "value": "25"},
+                     {"type": "audit", "code": "OPP_QUAL"}]},
+        {"from": "Q", "to": "N", "event": "advance", "guard": null,
+         "actions": [{"type": "set", "field": "STAGE_PCT", "value": "60"}]},
+        {"from": "N", "to": "W", "event": "close_won", "guard": "CLOSE_DT <> '00000000'",
+         "actions": [{"type": "set", "field": "STAGE_PCT", "value": "100"},
+                     {"type": "audit", "code": "OPP_WON"},
+                     {"type": "notify", "template": "won_deal"}]},
+        {"from": "P", "to": "L", "event": "close_lost", "guard": "LOST_RSN <> ''",
+         "actions": [{"type": "set", "field": "STAGE_PCT", "value": "0"},
+                     {"type": "audit", "code": "OPP_LOST"}]},
+        {"from": "Q", "to": "L", "event": "close_lost", "guard": "LOST_RSN <> ''",
+         "actions": [{"type": "set", "field": "STAGE_PCT", "value": "0"},
+                     {"type": "audit", "code": "OPP_LOST"}]},
+        {"from": "N", "to": "L", "event": "close_lost", "guard": "LOST_RSN <> ''",
+         "actions": [{"type": "set", "field": "STAGE_PCT", "value": "0"},
+                     {"type": "audit", "code": "OPP_LOST"}]}
+      ]
+    },
+    {
+      "name": "case_lifecycle",
+      "entity": "CASE_MASTER",
+      "state_field": "STAT_CD",
+      "states": [
+        {"code": "N", "initial": true,
+         "timers": [{"after_days": 2, "event": "auto_escalate"}]},
+        {"code": "A", "initial": false,
+         "timers": [{"after_days": 7, "event": "auto_escalate"}]},
+        {"code": "P", "initial": false, "timers": []},
+        {"code": "R", "initial": false, "timers": []},
+        {"code": "X", "initial": false, "timers": []}
+      ],
+      "transitions": [
+        {"from": "N", "to": "A", "event": "assign", "guard": "OWNER_UID <> ''",
+         "actions": [{"type": "audit", "code": "CASE_ASSIGN"}]},
+        {"from": "N", "to": "A", "event": "auto_escalate", "guard": null,
+         "actions": [{"type": "set", "field": "ESC_FLG", "value": "Y"},
+                     {"type": "set", "field": "SEV_CD", "value": "=NVL(SEV_CD,'3')"},
+                     {"type": "audit", "code": "CASE_ESC"},
+                     {"type": "notify", "template": "escalation"}]},
+        {"from": "A", "to": "A", "event": "auto_escalate", "guard": "ESC_FLG <> 'Y'",
+         "actions": [{"type": "set", "field": "ESC_FLG", "value": "Y"},
+                     {"type": "audit", "code": "CASE_ESC"},
+                     {"type": "notify", "template": "escalation"}]},
+        {"from": "A", "to": "P", "event": "await_customer", "guard": null,
+         "actions": [{"type": "audit", "code": "CASE_PEND"}]},
+        {"from": "P", "to": "A", "event": "customer_reply", "guard": null, "actions": []},
+        {"from": "A", "to": "R", "event": "resolve", "guard": "RES_DT <> '00000000'",
+         "actions": [{"type": "audit", "code": "CASE_RES"}]},
+        {"from": "R", "to": "X", "event": "close", "guard": null,
+         "actions": [{"type": "audit", "code": "CASE_CLOSE"}]},
+        {"from": "R", "to": "A", "event": "reopen", "guard": null,
+         "actions": [{"type": "set", "field": "RES_DT", "value": "00000000"},
+                     {"type": "audit", "code": "CASE_REOPEN"}]}
+      ]
+    },
+    {
+      "name": "order_fulfilment",
+      "entity": "ORD_HEADER",
+      "state_field": "STAT_CD",
+      "states": [
+        {"code": "E", "initial": true, "timers": []},
+        {"code": "A", "initial": false, "timers": []},
+        {"code": "S", "initial": false, "timers": []},
+        {"code": "I", "initial": false, "timers": []},
+        {"code": "X", "initial": false, "timers": []}
+      ],
+      "transitions": [
+        {"from": "E", "to": "A", "event": "approve", "guard": "NVL(TOT_AMT,0) > 0",
+         "actions": [{"type": "audit", "code": "ORD_APPR"}]},
+        {"from": "A", "to": "S", "event": "ship", "guard": null,
+         "actions": [{"type": "audit", "code": "ORD_SHIP"},
+                     {"type": "notify", "template": "shipped"}]},
+        {"from": "S", "to": "I", "event": "invoice", "guard": null,
+         "actions": [{"type": "audit", "code": "ORD_INV"}]},
+        {"from": "E", "to": "X", "event": "cancel", "guard": null,
+         "actions": [{"type": "audit", "code": "ORD_CANC"}]},
+        {"from": "A", "to": "X", "event": "cancel",
+         "guard": "LOOKUP(ACCT_MASTER, ACCT_ID, ACCT_ID, CRED_HOLD) <> 'Y'",
+         "actions": [{"type": "audit", "code": "ORD_CANC"}]},
+        {"from": "I", "to": "X", "event": "cancel", "guard": null,
+         "actions": [{"type": "audit", "code": "ORD_CANC_INV"},
+                     {"type": "notify", "template": "credit_note"}]}
+      ]
+    }
+  ]
+}

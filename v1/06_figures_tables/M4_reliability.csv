@@ -1,0 +1,12 @@
+model,condition,k,pass_all_k_rate,all_k_agree_rate
+gpt56luna,C1,5,0.917,0.917
+gpt56luna,C2,5,0.889,0.889
+gpt56luna,C3,5,0.917,0.917
+gpt56sol,C1,5,1.000,1.000
+gpt56sol,C2,5,0.972,0.972
+gpt56sol,C3,5,1.000,1.000
+gpt56sol,C4,5,1.000,1.000
+gpt56terra,C1,5,0.972,0.972
+gpt56terra,C2,5,0.917,0.917
+gpt56terra,C3,5,0.917,0.917
+gpt56terra,C4,5,1.000,1.000

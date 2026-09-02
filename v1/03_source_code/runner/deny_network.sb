@@ -1,0 +1,20 @@
+(version 1)
+; LegacyCRM-Bench candidate sandbox: allow local execution, deny all networking,
+; and deny reads of credential-bearing user files (shell profiles, ssh, keychains,
+; cloud-provider configs). A hostile candidate could otherwise copy a key into its
+; observable outputs even with the network denied.
+(allow default)
+(deny network*)
+(deny file-read*
+  (literal (string-append (param "HOMEDIR") "/.zshrc"))
+  (literal (string-append (param "HOMEDIR") "/.zshenv"))
+  (literal (string-append (param "HOMEDIR") "/.zprofile"))
+  (literal (string-append (param "HOMEDIR") "/.bashrc"))
+  (literal (string-append (param "HOMEDIR") "/.bash_profile"))
+  (literal (string-append (param "HOMEDIR") "/.netrc"))
+  (subpath (string-append (param "HOMEDIR") "/.ssh"))
+  (subpath (string-append (param "HOMEDIR") "/.aws"))
+  (subpath (string-append (param "HOMEDIR") "/.config"))
+  (subpath (string-append (param "HOMEDIR") "/.anthropic"))
+  (subpath (string-append (param "HOMEDIR") "/.openai"))
+  (subpath (string-append (param "HOMEDIR") "/Library/Keychains")))

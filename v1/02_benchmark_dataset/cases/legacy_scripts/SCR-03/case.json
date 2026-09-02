@@ -1,0 +1,17 @@
+{
+  "id": "SCR-03",
+  "title": "Migrate the case_escalation CRMScript with DATEDIFF day-boundary and sentinel rules",
+  "category": "legacy_scripts",
+  "difficulty": "hard",
+  "source_artifacts": ["legacy/case_escalation.crms", "legacy/SEMANTICS_EXCERPT.md"],
+  "target_requirement": "Reimplement the nightly case-escalation scan as a Python module exposing escalate(cases, today) -> list of {workflow, entity_id, event} auto_escalate events: New cases escalate at DATEDIFF(today, OPEN_DT) >= 2 days regardless of ESC_FLG; Assigned cases at >= 7 days only when ESC_FLG != 'Y'; DATEDIFF is whole calendar days with the 00000000 sentinel (and empty dates) yielding 0 so such cases are never overdue; live rows only, events ordered by ascending CASE_ID; today is injected.",
+  "expected_behavior": "Exact day boundaries hold (1 day: no, 2 days: yes for N; 6 days: no, 7 days: yes for A); DATEDIFF uses real date arithmetic across month boundaries; sentinel, empty, and future OPEN_DT never escalate; already-escalated Assigned cases are skipped while the New-case rule ignores ESC_FLG; soft-deleted cases and statuses P/R/X emit nothing; at most one event per case.",
+  "deliverables": ["migrated.py"],
+  "dependencies": {"python": ">=3.10", "packages": []},
+  "provenance": "Synthetic; authored for LegacyCRM-Bench from Meridian CRM 4.2 spec (SYSTEM_OVERVIEW.md §4, §3) and scripts/case_escalation.crms.",
+  "license": "Code: MIT; data/specs: CC BY 4.0",
+  "ground_truth_derivation": "GROUND_TRUTH.md",
+  "security_expectations": "No network access and no wall-clock reads (today is injected); the module must not import network or subprocess modules.",
+  "failure_conditions": "Reading the system clock instead of the injected today; string/numeric date subtraction instead of calendar day counts; treating the 00000000 sentinel as a real date (escalating every sentinel case); applying the ESC_FLG check to New cases or dropping it for Assigned cases; off-by-one day boundaries.",
+  "num_tests": 18
+}

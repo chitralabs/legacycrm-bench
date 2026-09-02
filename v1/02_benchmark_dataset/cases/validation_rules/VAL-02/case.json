@@ -1,0 +1,17 @@
+{
+  "id": "VAL-02",
+  "title": "Migrate account validation rules (incl. OLD.-based credit-hold release guard) from VRL to Python",
+  "category": "validation_rules",
+  "difficulty": "easy",
+  "source_artifacts": ["legacy/account_rules.vrl", "legacy/SEMANTICS_EXCERPT.md"],
+  "target_requirement": "Reimplement the five ACCT_MASTER validation rules (ACC-001..ACC-005) as a Python module exposing validate(record, old, event, today) with the same interface as VAL-01, preserving VRL semantics: collect-all in rule-file order, empty-string-to-zero numeric coercion, NVL defaults, event filtering (ACC-004 is UPDATE-only and reads OLD.CRED_HOLD), and BLOCK vs WARN severity (ACC-005 is WARN).",
+  "expected_behavior": "validate() returns [] for compliant records; failures carry the legacy code/message/severity in file order; the credit-hold release guard E1004 fires only on UPDATE when OLD.CRED_HOLD='Y', CRED_HOLD='N' and CRED_LIMIT<=0 (blank limit coerces to 0); a two-char region code yields only the WARN E1005 with is_blocked() False.",
+  "deliverables": ["migrated.py"],
+  "dependencies": {"python": ">=3.10", "packages": []},
+  "provenance": "Synthetic; authored for LegacyCRM-Bench from Meridian CRM 4.2 spec (SYSTEM_OVERVIEW.md §2).",
+  "license": "Code: MIT; data/specs: CC BY 4.0",
+  "ground_truth_derivation": "GROUND_TRUTH.md",
+  "security_expectations": "No network access; the module must not import network or subprocess modules; no privilege-style widening (the release guard must not be weakened to allow zero-limit releases).",
+  "failure_conditions": "Firing ACC-004 on INSERT; treating blank CRED_LIMIT as passing the release guard; dropping WARN severity or blocking on WARN-only failures; short-circuiting after the first failure.",
+  "num_tests": 16
+}

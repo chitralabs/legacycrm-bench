@@ -1,0 +1,17 @@
+{
+  "id": "WFL-02",
+  "title": "Migrate the case_lifecycle XML workflow (transitions only) with set-action ordering",
+  "category": "workflows",
+  "difficulty": "medium",
+  "source_artifacts": ["legacy/case_lifecycle.xml", "legacy/SEMANTICS_EXCERPT.md"],
+  "target_requirement": "Reimplement the case_lifecycle workflow (timers excluded) as a Python module exposing fire(state, event, record) that returns {state, record, audits, notifies, matched}, preserving legacy engine semantics: first-match-in-document-order, guards with VRL coercions, set actions (literal and =NVL(SEV_CD,'3') expression) applied after the state change in order, self-transitions counting as matched, and the WF_NOMATCH no-op.",
+  "expected_behavior": "assign requires an owner; auto_escalate from N sets ESC_FLG='Y' and defaults blank SEV_CD to '3' (keeping explicit severities); auto_escalate from A is a matched self-transition guarded by ESC_FLG<>'Y' (already-escalated cases are a WF_NOMATCH no-op); resolve requires a non-sentinel RES_DT; reopen R->A clears RES_DT to '00000000' so an immediate resolve no-matches; audits/notifies are collected in action order; input records are never mutated.",
+  "deliverables": ["migrated.py"],
+  "dependencies": {"python": ">=3.10", "packages": []},
+  "provenance": "Synthetic; authored for LegacyCRM-Bench from Meridian CRM 4.2 spec (SYSTEM_OVERVIEW.md §3) and workflows.xml.",
+  "license": "Code: MIT; data/specs: CC BY 4.0",
+  "ground_truth_derivation": "GROUND_TRUTH.md",
+  "security_expectations": "No network access; the module must not import network or subprocess modules; notify actions are returned as data, never dispatched.",
+  "failure_conditions": "Overwriting an explicit SEV_CD on escalation; double-escalating an already escalated case; applying reopen's RES_DT clear to the input dict instead of a copy; treating the A->A self-transition as a no-op; raising on unmatched events.",
+  "num_tests": 16
+}

@@ -1,0 +1,34 @@
+{
+  "erp_orders": {
+    "url": "https://erp.example.internal/api/orders",
+    "auth": {"type": "basic", "secret_ref": "vault://meridian/erp_user"},
+    "retry": 3,
+    "timeout_ms": 30000,
+    "payload": "fixed_width",
+    "layout": "EXPORT_ORD"
+  },
+  "dw_accounts": {
+    "url": "https://dw.example.internal/load/accounts",
+    "auth": {"type": "apikey", "secret_ref": "vault://meridian/dw_key"},
+    "retry": 1,
+    "timeout_ms": 60000,
+    "payload": "fixed_width",
+    "layout": "EXPORT_ACCT"
+  },
+  "notifier": {
+    "url": "https://notify.example.internal/send",
+    "auth": {"type": "none", "secret_ref": null},
+    "retry": 0,
+    "timeout_ms": 5000,
+    "payload": "xml",
+    "layout": null
+  },
+  "marketing_sync": {
+    "url": "https://mkt.example.internal/contacts",
+    "auth": {"type": "apikey", "secret_ref": "vault://meridian/mkt_key"},
+    "retry": 2,
+    "timeout_ms": 15000,
+    "payload": "csv",
+    "layout": null
+  }
+}

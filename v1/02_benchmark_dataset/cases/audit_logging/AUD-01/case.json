@@ -1,0 +1,17 @@
+{
+  "id": "AUD-01",
+  "title": "Migrate the audited-column configuration parser",
+  "category": "audit_logging",
+  "difficulty": "easy",
+  "source_artifacts": ["legacy/audit_config.cfg", "legacy/SEMANTICS_EXCERPT.md"],
+  "target_requirement": "Reimplement the legacy audit_config.cfg reader as a Python module exposing audited_columns(cfg_text) -> dict[table, set[column]] that parses 'AUDIT <TABLE> <COLUMN>' lines, ignores comments and blank lines, deduplicates declarations, and includes only tables that have at least one declaration.",
+  "expected_behavior": "Parsing the legacy artifact yields exactly the five audited tables with their exact column sets (e.g. ACCT_MASTER -> {CRED_HOLD, CRED_LIMIT, OWNER_UID}); unlisted columns and tables are absent; hand-crafted inputs with comments, blanks and duplicates parse per the documented format; an all-comment file yields {}.",
+  "deliverables": ["migrated.py"],
+  "dependencies": {"python": ">=3.10", "packages": []},
+  "provenance": "Synthetic; authored for LegacyCRM-Bench from Meridian CRM 4.2 spec (SYSTEM_OVERVIEW.md §8).",
+  "license": "Code: MIT; data/specs: CC BY 4.0",
+  "ground_truth_derivation": "GROUND_TRUTH.md",
+  "security_expectations": "The parser must not widen the audited set: no column or table may be reported as audited unless explicitly declared in the configuration text. No network or subprocess imports.",
+  "failure_conditions": "Inventing audited columns/tables; dropping declarations; performing file or network I/O inside the module; nondeterminism.",
+  "num_tests": 12
+}

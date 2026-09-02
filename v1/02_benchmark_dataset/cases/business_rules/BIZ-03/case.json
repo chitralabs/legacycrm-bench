@@ -1,0 +1,17 @@
+{
+  "id": "BIZ-03",
+  "title": "Preserve the interacting invoiced-order rules: E5003, I->X actions, frozen totals",
+  "category": "business_rules",
+  "difficulty": "hard",
+  "source_artifacts": ["legacy/order_rules.vrl", "legacy/order_fulfilment.xml", "legacy/order_totals.crms", "legacy/SEMANTICS_EXCERPT.md"],
+  "target_requirement": "Deliver migrated.py with transition_invoiced(order, new_status) -> (order, audits, notifies) enforcing ORD-003 (invoiced order may only stay I or move to X; E5003 otherwise) with the workflow's I->X actions (ORD_CANC_INV audit + credit_note notify), and recompute_total(order, lines) -> (order, lines, audits) implementing the order_totals recompute (half-up cents, ORD_RETOTAL only on change, soft-deleted lines excluded) with invoiced totals frozen (STAT_CD='I' untouched, like the skipped 'X').",
+  "expected_behavior": "I->X yields STAT_CD X with exactly ORD_CANC_INV and credit_note; I->I is vacuous; I->E/A/S raises E5003 with the legacy message; recompute on an invoiced order changes nothing and audits nothing even when lines changed; on E/A/S orders EXT_AMT=QTY*UNIT_PRC and TOT_AMT applies the discount with half-up rounding (5.005 -> 5.01), auditing ORD_RETOTAL only when the total changed; cancelled orders are skipped; inputs never mutated.",
+  "deliverables": ["migrated.py"],
+  "dependencies": {"python": ">=3.10", "packages": []},
+  "provenance": "Synthetic; authored for LegacyCRM-Bench from Meridian CRM 4.2 spec (SYSTEM_OVERVIEW.md §1, §2, §3, §4).",
+  "license": "Code: MIT; data/specs: CC BY 4.0",
+  "ground_truth_derivation": "GROUND_TRUTH.md",
+  "security_expectations": "No path may alter an invoiced order's financial totals; the E5003 guard must not be bypassable via the recompute path; no network or subprocess imports.",
+  "failure_conditions": "Preserving only the workflow actions (allowing I->A) or only the validation rule (dropping ORD_CANC_INV/credit_note); recomputing an invoiced or cancelled order; float banker's rounding; auditing an unchanged total; mutating inputs.",
+  "num_tests": 17
+}

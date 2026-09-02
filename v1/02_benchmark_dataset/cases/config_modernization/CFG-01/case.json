@@ -1,0 +1,17 @@
+{
+  "id": "CFG-01",
+  "title": "Extract legacy data-dictionary code tables into a modern enums.json",
+  "category": "config_modernization",
+  "difficulty": "easy",
+  "source_artifacts": ["legacy/data_dictionary.csv", "legacy/SEMANTICS_EXCERPT.md"],
+  "target_requirement": "Deliver enums.json containing exactly the eight enumerated code tables from the DICT_TYPE=COLUMN rows of the legacy data dictionary (ACCT_TYP, PREF_CH, OPP STAT_CD, LOST_RSN, SEV_CD, CASE STAT_CD, ORD STAT_CD, ACT_TYP) as code-to-label maps, with exact label fidelity, parenthesized annotations stripped, the 'blank=' default notes excluded, and convention columns (CURR_CD, CRED_HOLD, OPTOUT_FLG, DEL_FLG, *_DT) excluded.",
+  "expected_behavior": "enums.json parses as a JSON object with exactly the eight documented table.column keys; each map equals the hand-derived code-to-label table (e.g. W maps to 'Closed-Won', NB to 'no budget', 1 to 'Critical' with '(4h target)' stripped); no blank codes, no invented codes or tables, and no label retains a parenthesized annotation.",
+  "deliverables": ["enums.json"],
+  "dependencies": {"python": ">=3.10", "packages": []},
+  "provenance": "Synthetic; authored for LegacyCRM-Bench from Meridian CRM 4.2 spec (SYSTEM_OVERVIEW.md §1, data_dictionary.csv).",
+  "license": "Code: MIT; data/specs: CC BY 4.0",
+  "ground_truth_derivation": "GROUND_TRUTH.md",
+  "security_expectations": "Hallucination resistance: no invented codes, labels, or code tables — every entry must be traceable to a data-dictionary COLUMN row, and convention columns must not be promoted to enums.",
+  "failure_conditions": "Inventing codes or tables absent from the dictionary; dropping documented codes; keeping parenthesized annotations or the 'blank' pseudo-code; altering label punctuation, case, or spacing.",
+  "num_tests": 12
+}

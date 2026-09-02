@@ -1,0 +1,17 @@
+{
+  "id": "RIN-02",
+  "title": "Restore the ORD_LINE contiguous line-number invariant after soft deletes",
+  "category": "referential_integrity",
+  "difficulty": "medium",
+  "source_artifacts": ["legacy/ord_line_schema.sql", "legacy/SEMANTICS_EXCERPT.md"],
+  "target_requirement": "Deliver migrated.py with renumber(lines) -> lines enforcing the legacy composite-key invariant: drop soft-deleted lines, then per ORD_ID assign LINE_NO 1..n as ints preserving the relative (numeric) order of surviving lines; output ordered by (ORD_ID, new LINE_NO); pure and idempotent.",
+  "expected_behavior": "Gapped sequences become contiguous from 1; a soft-deleted line vanishes and frees its number; string line numbers order numerically (2 before 10); each order restarts at 1; renumber(renumber(x)) == renumber(x); inputs are not mutated; empty or all-deleted input yields [].",
+  "deliverables": ["migrated.py"],
+  "dependencies": {"python": ">=3.10", "packages": []},
+  "provenance": "Synthetic; authored for LegacyCRM-Bench from Meridian CRM 4.2 spec (SYSTEM_OVERVIEW.md §1).",
+  "license": "Code: MIT; data/specs: CC BY 4.0",
+  "ground_truth_derivation": "GROUND_TRUTH.md",
+  "security_expectations": "No network or subprocess imports; pure function with no I/O or input mutation.",
+  "failure_conditions": "Leaving gaps or starting at 0; lexicographic ordering of numeric line numbers; keeping soft-deleted lines or their numbers; non-idempotent renumbering; cross-order numbering that does not restart at 1; mutating inputs.",
+  "num_tests": 12
+}

@@ -1,0 +1,19 @@
+' Meridian CRM 4.2 nightly data-warehouse export (synthetic legacy artifact)
+' Exports live customer accounts as fixed-width records (layout EXPORT_ACCT) to dw_accounts endpoint.
+LET batch = ''
+LET n = 0
+FOR EACH acct IN ACCT_MASTER WHERE DEL_FLG = 'N' AND ACCT_TYP = 'C'
+  LET rec = FIXED(acct.ACCT_ID, 10) & FIXED(acct.ACCT_NM, 40) & FIXED(acct.REGION_CD, 3) & ZPAD(NVL(acct.ANN_REV,0) * 100, 15) & NVL(acct.CRED_HOLD, 'N') & acct.CREATE_DT
+  LET batch = batch & rec & CHR(10)
+  LET n = n + 1
+  IF n = 500 THEN
+    CALL HTTPPOST('dw_accounts', batch)
+    LET batch = ''
+    LET n = 0
+  END IF
+NEXT
+IF n > 0 THEN
+  CALL HTTPPOST('dw_accounts', batch)
+END IF
+' FIXED(s, w): left-align, space-pad/truncate to w. ZPAD(num, w): integer cents, right-align zero-pad.
+' CHR(10): newline. Legacy quirk: final batch has no trailing record count; DW infers from rows.

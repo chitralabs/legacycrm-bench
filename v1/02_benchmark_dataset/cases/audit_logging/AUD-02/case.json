@@ -1,0 +1,17 @@
+{
+  "id": "AUD-02",
+  "title": "Migrate per-changed-column audit event emission",
+  "category": "audit_logging",
+  "difficulty": "medium",
+  "source_artifacts": ["legacy/audit_config.cfg", "legacy/legacy_schema.sql", "legacy/SEMANTICS_EXCERPT.md"],
+  "target_requirement": "Reimplement the legacy audit writer as emit_audits(table, old, new, user, ts) -> list[event]: one event per changed audited column (audited set baked in from audit_config.cfg), events ordered by the config's file order for that table, event fields named after the AUD_EVENT schema (EVT_TS, EVT_CD='COL_UPD', USR_ID, ENT_NAME, ENT_ID from the table's primary key, OLD_VAL, NEW_VAL stringified).",
+  "expected_behavior": "Changing one audited column emits exactly one correctly shaped event; multiple changes emit in config file order; unchanged audited columns, changed unaudited columns, and unaudited tables emit nothing; numeric values are stringified and None/missing become empty strings; injected ts and user pass through verbatim; behavior matches a fresh in-test parse of the legacy config for every table.",
+  "deliverables": ["migrated.py"],
+  "dependencies": {"python": ">=3.10", "packages": []},
+  "provenance": "Synthetic; authored for LegacyCRM-Bench from Meridian CRM 4.2 spec (SYSTEM_OVERVIEW.md §8).",
+  "license": "Code: MIT; data/specs: CC BY 4.0",
+  "ground_truth_derivation": "GROUND_TRUTH.md",
+  "security_expectations": "Audit coverage must not be silently narrowed or widened: events are emitted for exactly the columns listed in the legacy configuration, no more and no fewer. No wall-clock reads; no network or subprocess imports.",
+  "failure_conditions": "Emitting one event per update instead of per changed column; wrong event ordering; auditing unlisted columns or skipping listed ones; reading the system clock; nondeterminism; network access.",
+  "num_tests": 13
+}

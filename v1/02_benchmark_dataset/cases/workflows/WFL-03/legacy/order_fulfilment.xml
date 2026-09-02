@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Excerpt of legacy_system/workflows.xml: workflow "order_fulfilment" only.
+     Semantics: SEMANTICS_EXCERPT.md (= SYSTEM_OVERVIEW.md §3, §2 excerpts; note the
+     LOOKUP guard on the A->X cancel transition). -->
+<workflows>
+  <workflow name="order_fulfilment" entity="ORD_HEADER" state_field="STAT_CD">
+    <states>
+      <state code="E" initial="true"/>
+      <state code="A"/>
+      <state code="S"/>
+      <state code="I"/>
+      <state code="X"/>
+    </states>
+    <transition from="E" to="A" event="approve">
+      <guard>NVL(TOT_AMT,0) &gt; 0</guard>
+      <actions><audit code="ORD_APPR"/></actions>
+    </transition>
+    <transition from="A" to="S" event="ship">
+      <actions><audit code="ORD_SHIP"/><notify template="shipped"/></actions>
+    </transition>
+    <transition from="S" to="I" event="invoice">
+      <actions><audit code="ORD_INV"/></actions>
+    </transition>
+    <transition from="E" to="X" event="cancel">
+      <actions><audit code="ORD_CANC"/></actions>
+    </transition>
+    <transition from="A" to="X" event="cancel">
+      <guard>LOOKUP(ACCT_MASTER, ACCT_ID, ACCT_ID, CRED_HOLD) &lt;&gt; 'Y'</guard>
+      <actions><audit code="ORD_CANC"/></actions>
+    </transition>
+    <transition from="I" to="X" event="cancel">
+      <actions><audit code="ORD_CANC_INV"/><notify template="credit_note"/></actions>
+    </transition>
+  </workflow>
+</workflows>

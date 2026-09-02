@@ -1,0 +1,12 @@
+[
+  {"name": "integrity_check", "at": "01:00", "script": "integrity_check.crms",
+   "on_error": {"policy": "CONTINUE", "retries": 0}},
+  {"name": "credit_hold_sweep", "at": "01:30", "script": "credit_hold_sweep.crms",
+   "on_error": {"policy": "ABORT", "retries": 0}},
+  {"name": "order_totals", "at": "02:00", "script": "order_totals.crms",
+   "on_error": {"policy": "RETRY", "retries": 2}},
+  {"name": "case_escalation", "at": "02:30", "script": "case_escalation.crms",
+   "on_error": {"policy": "CONTINUE", "retries": 0}},
+  {"name": "dw_export", "at": "03:00", "script": "dw_export.crms",
+   "on_error": {"policy": "RETRY", "retries": 1}}
+]

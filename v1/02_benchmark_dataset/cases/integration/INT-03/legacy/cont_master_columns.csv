@@ -1,0 +1,4 @@
+DICT_TYPE,TABLE_NM,COL_NM,POSITION,LENGTH,MEANING
+COLUMN,CONT_MASTER,PREF_CH,,1,"E=email;P=phone;M=mail;blank=E"
+COLUMN,CONT_MASTER,OPTOUT_FLG,,1,"Y=excluded from all marketing communications"
+COLUMN,ALL,DEL_FLG,,1,"Y=soft-deleted; excluded from all reads unless stated"

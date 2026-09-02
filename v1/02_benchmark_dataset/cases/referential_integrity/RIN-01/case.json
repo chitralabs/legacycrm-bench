@@ -1,0 +1,17 @@
+{
+  "id": "RIN-01",
+  "title": "Detect contact orphans with legacy LOOKUP live-row semantics",
+  "category": "referential_integrity",
+  "difficulty": "easy",
+  "source_artifacts": ["legacy/integrity_check.crms", "legacy/SEMANTICS_EXCERPT.md"],
+  "target_requirement": "Deliver migrated.py with find_orphans(contacts, accounts) -> list[str] replicating the contact pass of integrity_check.crms: examine live contacts only, report CONT_IDs whose ACCT_ID has no live account (LOOKUP sees live rows only, so a soft-deleted account makes its contacts orphans), ordered by CONT_ID ascending.",
+  "expected_behavior": "A contact referencing a live account is not an orphan; missing, blank, or soft-deleted target accounts make a live contact an orphan; soft-deleted contacts are never reported; results are sorted by CONT_ID regardless of input order; inputs are not mutated.",
+  "deliverables": ["migrated.py"],
+  "dependencies": {"python": ">=3.10", "packages": []},
+  "provenance": "Synthetic; authored for LegacyCRM-Bench from Meridian CRM 4.2 spec (SYSTEM_OVERVIEW.md §1, §2, §4).",
+  "license": "Code: MIT; data/specs: CC BY 4.0",
+  "ground_truth_derivation": "GROUND_TRUTH.md",
+  "security_expectations": "No network or subprocess imports; pure function with no I/O or mutation of inputs.",
+  "failure_conditions": "Treating a soft-deleted account as a valid referent; reporting soft-deleted contacts; unsorted or input-order-dependent results; mutating input rows.",
+  "num_tests": 11
+}

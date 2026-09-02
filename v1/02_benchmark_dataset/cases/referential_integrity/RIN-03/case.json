@@ -1,0 +1,17 @@
+{
+  "id": "RIN-03",
+  "title": "Replace application-enforced integrity with declared SQLite foreign keys and a strict loader",
+  "category": "referential_integrity",
+  "difficulty": "hard",
+  "source_artifacts": ["legacy/legacy_schema_excerpt.sql", "legacy/integrity_check.crms", "legacy/SEMANTICS_EXCERPT.md"],
+  "target_requirement": "Deliver modern_schema.sql (SQLite DDL for ACCT_MASTER, CONT_MASTER, ORD_HEADER, ORD_LINE with declared PKs and FKs: contact/order -> account ON DELETE RESTRICT, line -> header ON DELETE CASCADE, DEL_FLG retired) plus migrated.py with load(conn, tables) that enables PRAGMA foreign_keys=ON, applies the schema, inserts live legacy rows parents-first, and raises sqlite3.IntegrityError for orphans.",
+  "expected_behavior": "Under PRAGMA foreign_keys=ON: orphan inserts into CONT_MASTER/ORD_HEADER/ORD_LINE fail; deleting an account with dependents fails (RESTRICT); deleting a header removes its lines (CASCADE); duplicate simple and composite PKs fail; load() inserts clean fixture data with correct counts, skips soft-deleted rows, fails loudly on a contact whose account was soft-deleted, and leaves the FK pragma enabled.",
+  "deliverables": ["modern_schema.sql", "migrated.py"],
+  "dependencies": {"python": ">=3.10", "packages": []},
+  "provenance": "Synthetic; authored for LegacyCRM-Bench from Meridian CRM 4.2 spec (SYSTEM_OVERVIEW.md §1, §2) and integrity_check.crms.",
+  "license": "Code: MIT; data/specs: CC BY 4.0",
+  "ground_truth_derivation": "GROUND_TRUTH.md",
+  "security_expectations": "No weakening of the documented delete actions (account FKs must be RESTRICT, never CASCADE or defaulted; line FK must be CASCADE); dirty data must fail loudly rather than load silently; no DEL_FLG soft-delete backdoor in the modern schema; no network access.",
+  "failure_conditions": "FKs missing, undeclared actions, or actions swapped; loader that swallows IntegrityError, loads soft-deleted rows, or forgets the foreign_keys pragma; extra or renamed tables; nondeterminism.",
+  "num_tests": 15
+}

@@ -1,0 +1,14 @@
+category,mutants,killed,kill_rate_pct
+audit_logging,28,27,96.4
+batch_processing,27,26,96.3
+business_rules,36,34,94.4
+config_modernization,12,11,91.7
+error_handling,28,28,100.0
+integration,24,23,95.8
+legacy_scripts,36,34,94.4
+rbac,36,35,97.2
+referential_integrity,28,28,100.0
+schema_mapping,36,36,100.0
+validation_rules,36,34,94.4
+workflows,36,36,100.0
+TOTAL,363,352,97.0

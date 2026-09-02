@@ -1,0 +1,2 @@
+# Excerpt of validation_rules.vrl (Meridian CRM 4.2): ACCT_MASTER credit-hold rule.
+RULE ACC-004 ON ACCT_MASTER WHEN UPDATE : NOT (OLD.CRED_HOLD = 'Y' AND CRED_HOLD = 'N' AND CRED_LIMIT <= 0) ELSE ERROR E1004 "Cannot release credit hold with zero credit limit"

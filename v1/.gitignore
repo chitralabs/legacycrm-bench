@@ -1,0 +1,23 @@
+# Environments and caches (never commit)
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Credentials and secrets — must never enter version control or any release
+.env
+.env.*
+*.key
+*.pem
+credentials*
+secrets*
+*_api_key*
+
+# Reproducer outputs (regenerated; archived evidence lives in 05_results/ proper)
+05_results/repro_*.jsonl
+
+# LaTeX build intermediates
+*.aux
+*.log
+*.out
+*.xdv

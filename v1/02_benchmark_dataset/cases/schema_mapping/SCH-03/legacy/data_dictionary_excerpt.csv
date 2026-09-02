@@ -1,0 +1,6 @@
+DICT_TYPE,TABLE_NM,COL_NM,POSITION,LENGTH,MEANING
+COLUMN,OPP_MASTER,STAT_CD,,1,"P=Prospecting(10%);Q=Qualified(25%);N=Negotiation(60%);W=Closed-Won(100%);L=Closed-Lost(0%)"
+COLUMN,OPP_MASTER,LOST_RSN,,2,"PR=price;CM=competitor;NB=no budget;TM=timing;OT=other"
+COLUMN,ACCT_MASTER,CURR_CD,,3,"ISO-4217 currency; blank=USD"
+COLUMN,ALL,DEL_FLG,,1,"Y=soft-deleted; excluded from all reads unless stated"
+COLUMN,ALL,*_DT,,8,"YYYYMMDD; 00000000=null"

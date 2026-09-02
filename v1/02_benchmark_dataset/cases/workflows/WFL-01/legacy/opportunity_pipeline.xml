@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Excerpt of legacy_system/workflows.xml: workflow "opportunity_pipeline" only.
+     Semantics: SEMANTICS_EXCERPT.md (= SYSTEM_OVERVIEW.md §3, §2 excerpts). -->
+<workflows>
+  <workflow name="opportunity_pipeline" entity="OPP_MASTER" state_field="STAT_CD">
+    <states>
+      <state code="P" initial="true"/>
+      <state code="Q"/>
+      <state code="N"/>
+      <state code="W"/>
+      <state code="L"/>
+    </states>
+    <transition from="P" to="Q" event="qualify">
+      <guard>NVL(AMT,0) &gt; 0</guard>
+      <actions><set field="STAGE_PCT" value="25"/><audit code="OPP_QUAL"/></actions>
+    </transition>
+    <transition from="Q" to="N" event="advance">
+      <actions><set field="STAGE_PCT" value="60"/></actions>
+    </transition>
+    <transition from="N" to="W" event="close_won">
+      <guard>CLOSE_DT &lt;&gt; '00000000'</guard>
+      <actions><set field="STAGE_PCT" value="100"/><audit code="OPP_WON"/><notify template="won_deal"/></actions>
+    </transition>
+    <transition from="P" to="L" event="close_lost">
+      <guard>LOST_RSN &lt;&gt; ''</guard>
+      <actions><set field="STAGE_PCT" value="0"/><audit code="OPP_LOST"/></actions>
+    </transition>
+    <transition from="Q" to="L" event="close_lost">
+      <guard>LOST_RSN &lt;&gt; ''</guard>
+      <actions><set field="STAGE_PCT" value="0"/><audit code="OPP_LOST"/></actions>
+    </transition>
+    <transition from="N" to="L" event="close_lost">
+      <guard>LOST_RSN &lt;&gt; ''</guard>
+      <actions><set field="STAGE_PCT" value="0"/><audit code="OPP_LOST"/></actions>
+    </transition>
+  </workflow>
+</workflows>

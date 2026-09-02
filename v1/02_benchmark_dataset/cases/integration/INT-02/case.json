@@ -1,0 +1,17 @@
+{
+  "id": "INT-02",
+  "title": "Reimplement the EXPORT_ACCT fixed-width DW export record builder",
+  "category": "integration",
+  "difficulty": "medium",
+  "source_artifacts": ["legacy/dw_export.crms", "legacy/export_acct_layout.csv", "legacy/SEMANTICS_EXCERPT.md"],
+  "target_requirement": "Deliver migrated.py with format_account(row) -> str producing the exact 77-character EXPORT_ACCT record (10+40+3+15+1+8) from the LAYOUT rows: FIXED left-align/space-pad/truncate for ACCT_ID/ACCT_NM/REGION_CD, ANN_REV as zero-padded 15-digit integer cents rounded half-up (blank -> 0), CRED_HOLD blank written as N, CREATE_DT verbatim with 00000000 for null, no record terminator.",
+  "expected_behavior": "Each field occupies its documented 1-based layout slice; the whole record for a hand-composed row matches character-for-character; names longer than 40 are truncated with nothing leaking past the field; 999.995 rounds half-up to 100000 cents; blank booleans/dates fall back to N / 00000000.",
+  "deliverables": ["migrated.py"],
+  "dependencies": {"python": ">=3.10", "packages": []},
+  "provenance": "Synthetic; authored for LegacyCRM-Bench from Meridian CRM 4.2 spec (SYSTEM_OVERVIEW.md §1, §4, §6).",
+  "license": "Code: MIT; data/specs: CC BY 4.0",
+  "ground_truth_derivation": "GROUND_TRUTH.md",
+  "security_expectations": "No network or subprocess imports in the deliverable; the formatter is pure and performs no I/O.",
+  "failure_conditions": "Wrong record length or field offsets; float banker's rounding instead of half-up on cents; blank CRED_HOLD not defaulted to N; appending a newline/terminator; truncating the name anywhere but at 40.",
+  "num_tests": 17
+}

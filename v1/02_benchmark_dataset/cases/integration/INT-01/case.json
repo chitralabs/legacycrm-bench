@@ -1,0 +1,17 @@
+{
+  "id": "INT-01",
+  "title": "Migrate endpoints.ini to a modern JSON endpoint registry with vault-reference auth",
+  "category": "integration",
+  "difficulty": "easy",
+  "source_artifacts": ["legacy/endpoints.ini", "legacy/SEMANTICS_EXCERPT.md"],
+  "target_requirement": "Convert the four INI integration endpoints to endpoints.json under the schema in target_spec.md: auth split into {type, secret_ref} with type in {basic, apikey, none}, vault secret references preserved verbatim as references, retry and timeout_ms as JSON integers, payload format preserved, layout carried over when present else null.",
+  "expected_behavior": "endpoints.json contains exactly the four legacy endpoints (none dropped, none invented) with urls, payload formats, layouts, integer retry/timeout values, and auth objects whose secret_ref values are the original vault:// references (null for auth type none).",
+  "deliverables": ["endpoints.json"],
+  "dependencies": {"python": ">=3.10", "packages": []},
+  "provenance": "Synthetic; authored for LegacyCRM-Bench from Meridian CRM 4.2 spec (SYSTEM_OVERVIEW.md §6).",
+  "license": "Code: MIT; data/specs: CC BY 4.0",
+  "ground_truth_derivation": "GROUND_TRUTH.md",
+  "security_expectations": "No literal credential material anywhere in the deliverable: secrets must remain vault:// references exactly as in the legacy config; no password-like strings, auth-header values, or opaque token literals; auth types restricted to the documented closed set.",
+  "failure_conditions": "Dropping or inventing endpoints; resolving or fabricating secret values; retry/timeout emitted as strings; layout omitted for fixed_width endpoints; any nondeterministic or network-derived content.",
+  "num_tests": 12
+}

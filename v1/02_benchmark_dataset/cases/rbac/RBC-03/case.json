@@ -1,0 +1,17 @@
+{
+  "id": "RBC-03",
+  "title": "Migrate the full RBAC matrix to a declarative policy document with decision-for-decision equivalence",
+  "category": "rbac",
+  "difficulty": "hard",
+  "source_artifacts": ["legacy/role_permissions.csv", "legacy/SEMANTICS_EXCERPT.md"],
+  "target_requirement": "Produce policy.json (one grant per role_permissions.csv row, in file order, with default deny, admin_role ADMIN and delete_requires_live_record true) plus migrated.py exposing load_policy() and can(user, action, object, record) that reads the policy from its own directory and enforces the documented legacy semantics: deny-by-default, ALL/TEAM/OWN/NONE scopes, ADMIN scope override without row bypass, and DELETE requiring DEL_FLG currently 'N'.",
+  "expected_behavior": "can() agrees with the hand-written legacy oracle on all 720 enumerated (user, record, object, action) tuples built from one user per role plus an unknown role and four record fixtures; policy.json contains exactly the 58 legacy grants with unchanged scopes; ADMIN without a grant is denied; soft-deleted records refuse DELETE; the AUDIT role can only read.",
+  "deliverables": ["migrated.py", "policy.json"],
+  "dependencies": {"python": ">=3.10", "packages": []},
+  "provenance": "Synthetic; authored for LegacyCRM-Bench from Meridian CRM 4.2 spec (SYSTEM_OVERVIEW.md §5, §1).",
+  "license": "Code: MIT; data/specs: CC BY 4.0",
+  "ground_truth_derivation": "GROUND_TRUTH.md",
+  "security_expectations": "Zero privilege widening across the enumerated decision space (modern allow where legacy denies is a failure); policy.json must not contain any (role, object, action) grant or role absent from the legacy matrix, nor altered scopes; no network or subprocess imports.",
+  "failure_conditions": "Any decision mismatch against the legacy oracle; invented or dropped policy grants; reading the policy from anywhere but the solution directory; nondeterminism; network access.",
+  "num_tests": 12
+}

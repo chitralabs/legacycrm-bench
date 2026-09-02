@@ -1,0 +1,17 @@
+{
+  "id": "CFG-02",
+  "title": "Modernize cross-cutting legacy storage conventions as a reusable utility module",
+  "category": "config_modernization",
+  "difficulty": "medium",
+  "source_artifacts": ["legacy/data_dictionary_excerpt.csv", "legacy/SEMANTICS_EXCERPT.md"],
+  "target_requirement": "Deliver migrated.py exposing to_iso(yyyymmdd) -> str|None (00000000/blank/None sentinel to None), from_iso(iso) -> str (None back to '00000000'), yn(char) -> bool (only 'Y' is True; blank means N), and to_minor_units(amount, currency) -> int (blank currency defaults to USD; JPY exponent 0, others 2; half-up rounding computed decimally per the legacy ZPAD convention; blank amount is 0).",
+  "expected_behavior": "to_iso('20260901')=='2026-09-01' and to_iso('00000000') is None; from_iso inverts it with None mapping to the sentinel, so both round-trip properties hold; yn('Y') is True while 'N'/''/None are False; to_minor_units('1234.56','USD')==123456, ('5000','JPY')==5000, ('1234.5','JPY')==1235, and ('19.995','USD')==2000 (decimal-safe half-up, not binary-float).",
+  "deliverables": ["migrated.py"],
+  "dependencies": {"python": ">=3.10", "packages": []},
+  "provenance": "Synthetic; authored for LegacyCRM-Bench from Meridian CRM 4.2 spec (SYSTEM_OVERVIEW.md §1 conventions, §4 ZPAD rounding).",
+  "license": "Code: MIT; data/specs: CC BY 4.0",
+  "ground_truth_derivation": "GROUND_TRUTH.md",
+  "security_expectations": "No network access; module must not import network or subprocess modules.",
+  "failure_conditions": "Treating the 00000000 sentinel as a real date; yn returning True for anything but 'Y'; bankers or binary-float rounding in to_minor_units; ignoring the JPY exponent or the USD default; broken round-trip between to_iso and from_iso.",
+  "num_tests": 16
+}

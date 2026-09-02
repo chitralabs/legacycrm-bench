@@ -1,0 +1,14 @@
+category,cases,reference_tests_passed,reference_tests_total,reference_cases_all_pass,null_tests_passed,null_tests_total
+audit_logging,3,39,39,3,0,39
+batch_processing,3,39,39,3,0,39
+business_rules,3,42,42,3,0,42
+config_modernization,3,43,43,3,0,43
+error_handling,3,41,41,3,0,41
+integration,3,43,43,3,0,43
+legacy_scripts,3,48,48,3,0,48
+rbac,3,42,42,3,0,42
+referential_integrity,3,38,38,3,0,38
+schema_mapping,3,44,44,3,0,44
+validation_rules,3,54,54,3,0,54
+workflows,3,48,48,3,0,48
+TOTAL,36,521,521,36,0,521

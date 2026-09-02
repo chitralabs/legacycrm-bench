@@ -1,0 +1,17 @@
+{
+  "id": "ERR-01",
+  "title": "Preserve the legacy division-by-zero quirk (0 result + SCRIPT_DIV0 audit)",
+  "category": "error_handling",
+  "difficulty": "easy",
+  "source_artifacts": ["legacy/order_totals.crms", "legacy/SEMANTICS_EXCERPT.md"],
+  "target_requirement": "Reimplement CRMScript numeric division as safe_div(a, b) -> (value, audits): division by a divisor coercing to zero yields the number 0 plus a single SCRIPT_DIV0 audit code instead of raising; legacy numeric coercion (empty string/None -> 0, numeric strings -> their value) applies to both operands.",
+  "expected_behavior": "safe_div(10,4) == (2.5, []); any zero divisor (0, 0.0, '', None, '0') returns (0.0, ['SCRIPT_DIV0']) and never raises; empty-string numerator coerces to 0; successful divisions emit no audits; the div-zero value is a real number, not None/NaN.",
+  "deliverables": ["migrated.py"],
+  "dependencies": {"python": ">=3.10", "packages": []},
+  "provenance": "Synthetic; authored for LegacyCRM-Bench from Meridian CRM 4.2 spec (SYSTEM_OVERVIEW.md §4, §2).",
+  "license": "Code: MIT; data/specs: CC BY 4.0",
+  "ground_truth_derivation": "GROUND_TRUTH.md",
+  "security_expectations": "No exception may escape safe_div for documented operand forms (fail-open into the documented quirk, matching the legacy engine); no network or subprocess imports.",
+  "failure_conditions": "Raising ZeroDivisionError; returning None/NaN/infinity on zero divisors; emitting no or duplicate SCRIPT_DIV0 codes; mishandling empty-string coercion; nondeterminism; network access.",
+  "num_tests": 13
+}

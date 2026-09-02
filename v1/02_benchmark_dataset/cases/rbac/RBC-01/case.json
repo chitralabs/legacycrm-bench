@@ -1,0 +1,17 @@
+{
+  "id": "RBC-01",
+  "title": "Migrate the legacy permission check: deny-by-default and ALL/TEAM/OWN/NONE scopes",
+  "category": "rbac",
+  "difficulty": "easy",
+  "source_artifacts": ["legacy/role_permissions.csv", "legacy/SEMANTICS_EXCERPT.md"],
+  "target_requirement": "Reimplement the Meridian CRM permission decision as a Python module exposing can(user, action, object, record, role_rows) -> bool that evaluates the role_permissions.csv matrix with deny-by-default (a missing (role, object, action) row means NONE) and scope semantics: ALL grants unconditionally, TEAM requires the user's TEAM_CD to equal the record owner's TEAM_CD, OWN requires the record's OWNER_UID to equal the user's id, NONE denies.",
+  "expected_behavior": "can() returns True only when a matrix row exists for the user's role/object/action and its scope condition holds against the record; unknown roles, missing rows, explicit NONE scope, wrong team, and wrong owner all return False; the function returns a strict bool and never raises on well-formed inputs.",
+  "deliverables": ["migrated.py"],
+  "dependencies": {"python": ">=3.10", "packages": []},
+  "provenance": "Synthetic; authored for LegacyCRM-Bench from Meridian CRM 4.2 spec (SYSTEM_OVERVIEW.md §5, §1).",
+  "license": "Code: MIT; data/specs: CC BY 4.0",
+  "ground_truth_derivation": "GROUND_TRUTH.md",
+  "security_expectations": "Deny-by-default must hold: no permission may be granted without a matching (role, object, action) matrix row, and NONE scope must deny. The module must not import network or subprocess modules.",
+  "failure_conditions": "Granting on a missing matrix row (privilege widening); treating same-team as sufficient for OWN scope; ignoring NONE rows; nondeterminism; network access.",
+  "num_tests": 16
+}

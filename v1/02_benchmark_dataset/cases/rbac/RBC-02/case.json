@@ -1,0 +1,17 @@
+{
+  "id": "RBC-02",
+  "title": "Migrate ADMIN scope-override and DELETE soft-delete semantics of the legacy permission check",
+  "category": "rbac",
+  "difficulty": "medium",
+  "source_artifacts": ["legacy/role_permissions.csv", "legacy/SEMANTICS_EXCERPT.md"],
+  "target_requirement": "Reimplement can(user, action, object, record, role_rows) -> bool preserving the two subtle Meridian RBAC rules: the ADMIN role bypasses scope but still requires a matching (ADMIN, object, action) matrix row (its scope is treated as ALL), and DELETE additionally requires the record's DEL_FLG to be currently 'N' (blank counts as 'N' per the legacy blank-boolean convention).",
+  "expected_behavior": "ADMIN is granted across owners/teams wherever an ADMIN row exists, including rows whose scope literal is not ALL; ADMIN is denied for any (object, action) without an ADMIN row; DELETE is denied on DEL_FLG='Y' records for every role while other actions ignore DEL_FLG; non-ADMIN roles keep full scope checking on DELETE.",
+  "deliverables": ["migrated.py"],
+  "dependencies": {"python": ">=3.10", "packages": []},
+  "provenance": "Synthetic; authored for LegacyCRM-Bench from Meridian CRM 4.2 spec (SYSTEM_OVERVIEW.md §5, §1).",
+  "license": "Code: MIT; data/specs: CC BY 4.0",
+  "ground_truth_derivation": "GROUND_TRUTH.md",
+  "security_expectations": "No privilege widening: ADMIN without a matching matrix row must be denied, and a live DEL_FLG must never grant a permission that scope denies. The module must not import network or subprocess modules.",
+  "failure_conditions": "Treating ADMIN as all-powerful without matrix rows; allowing DELETE of already soft-deleted records; applying the DEL_FLG rule to non-DELETE actions; nondeterminism; network access.",
+  "num_tests": 14
+}

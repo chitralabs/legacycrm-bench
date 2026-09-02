@@ -1,0 +1,23 @@
+' Meridian CRM 4.2 nightly referential-integrity check (synthetic legacy artifact)
+' The legacy store has no declarative FKs; this script finds orphans and flags them.
+LET orphan_count = 0
+FOR EACH cont IN CONT_MASTER WHERE DEL_FLG = 'N'
+  IF LOOKUP(ACCT_MASTER, ACCT_ID, cont.ACCT_ID, ACCT_ID) = '' THEN
+    CALL AUDIT('ORPHAN_CONT', cont.CONT_ID)
+    LET orphan_count = orphan_count + 1
+  END IF
+NEXT
+FOR EACH opp IN OPP_MASTER WHERE DEL_FLG = 'N'
+  IF LOOKUP(ACCT_MASTER, ACCT_ID, opp.ACCT_ID, ACCT_ID) = '' THEN
+    CALL AUDIT('ORPHAN_OPP', opp.OPP_ID)
+    LET orphan_count = orphan_count + 1
+  END IF
+NEXT
+FOR EACH line IN ORD_LINE WHERE DEL_FLG = 'N'
+  IF LOOKUP(ORD_HEADER, ORD_ID, line.ORD_ID, ORD_ID) = '' THEN
+    ' orphan lines are soft-deleted, not reported (legacy behavior)
+    UPDATE line SET DEL_FLG = 'Y'
+    CALL AUDIT('ORPHAN_LINE_DEL', line.ORD_ID & '-' & line.LINE_NO)
+  END IF
+NEXT
+RETURN orphan_count

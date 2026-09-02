@@ -1,0 +1,17 @@
+{
+  "id": "SCH-03",
+  "title": "Collapse OPP_MASTER redundant stage fields and convert amounts to currency-aware minor units",
+  "category": "schema_mapping",
+  "difficulty": "hard",
+  "source_artifacts": ["legacy/opp_master.sql", "legacy/data_dictionary_excerpt.csv", "legacy/SEMANTICS_EXCERPT.md"],
+  "target_requirement": "Deliver migrated.py exposing convert_opportunity(row) -> dict | None that maps legacy OPP_MASTER rows to the modern 13-key opportunity shape per target_spec.md: collapse STAT_CD/STAGE_PCT into one stage enum trusting STAT_CD (disagreement adds migration_flags=['stage_pct_mismatch'], never remaps), convert AMT to int minor units with currency-aware exponent (JPY 0, others 2) using half-up rounding, blank CURR_CD to USD, sentinel CLOSE_DT/CREATE_DT/UPD_DT to None, blank LOST_RSN to None, and None for soft-deleted rows.",
+  "expected_behavior": "convert_opportunity returns None for DEL_FLG='Y'; stage comes only from STAT_CD (Q + STAGE_PCT=60 gives 'qualified' plus the mismatch flag, not 'negotiation'); blank STAGE_PCT coerces to 0 so it is consistent for L but flagged for P; AMT '1234.56' USD gives amount_minor 123456 (int), '5000' JPY gives 5000, '1234.50' JPY rounds half-up to 1235; output carries exactly the 13 modern keys.",
+  "deliverables": ["migrated.py"],
+  "dependencies": {"python": ">=3.10", "packages": []},
+  "provenance": "Synthetic; authored for LegacyCRM-Bench from Meridian CRM 4.2 spec (SYSTEM_OVERVIEW.md §1, §4 ZPAD rounding).",
+  "license": "Code: MIT; data/specs: CC BY 4.0",
+  "ground_truth_derivation": "GROUND_TRUTH.md",
+  "security_expectations": "No network access; module must not import network or subprocess modules; no data invented (stage only from documented STAT_CD codes).",
+  "failure_conditions": "Mapping stage from STAGE_PCT when it disagrees with STAT_CD; float amount_minor or bankers rounding; ignoring the JPY exponent; emitting soft-deleted rows; leaking STAGE_PCT or other legacy keys; nondeterminism or I/O.",
+  "num_tests": 16
+}

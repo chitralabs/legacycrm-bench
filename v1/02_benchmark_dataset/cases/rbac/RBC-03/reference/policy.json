@@ -1,0 +1,356 @@
+{
+  "version": 1,
+  "default": "deny",
+  "admin_role": "ADMIN",
+  "delete_requires_live_record": true,
+  "grants": [
+    {
+      "role": "ADMIN",
+      "object": "ACCT_MASTER",
+      "action": "READ",
+      "scope": "ALL"
+    },
+    {
+      "role": "ADMIN",
+      "object": "ACCT_MASTER",
+      "action": "CREATE",
+      "scope": "ALL"
+    },
+    {
+      "role": "ADMIN",
+      "object": "ACCT_MASTER",
+      "action": "UPDATE",
+      "scope": "ALL"
+    },
+    {
+      "role": "ADMIN",
+      "object": "ACCT_MASTER",
+      "action": "DELETE",
+      "scope": "ALL"
+    },
+    {
+      "role": "ADMIN",
+      "object": "ACCT_MASTER",
+      "action": "EXPORT",
+      "scope": "ALL"
+    },
+    {
+      "role": "ADMIN",
+      "object": "CONT_MASTER",
+      "action": "READ",
+      "scope": "ALL"
+    },
+    {
+      "role": "ADMIN",
+      "object": "CONT_MASTER",
+      "action": "CREATE",
+      "scope": "ALL"
+    },
+    {
+      "role": "ADMIN",
+      "object": "CONT_MASTER",
+      "action": "UPDATE",
+      "scope": "ALL"
+    },
+    {
+      "role": "ADMIN",
+      "object": "CONT_MASTER",
+      "action": "DELETE",
+      "scope": "ALL"
+    },
+    {
+      "role": "ADMIN",
+      "object": "OPP_MASTER",
+      "action": "READ",
+      "scope": "ALL"
+    },
+    {
+      "role": "ADMIN",
+      "object": "OPP_MASTER",
+      "action": "CREATE",
+      "scope": "ALL"
+    },
+    {
+      "role": "ADMIN",
+      "object": "OPP_MASTER",
+      "action": "UPDATE",
+      "scope": "ALL"
+    },
+    {
+      "role": "ADMIN",
+      "object": "OPP_MASTER",
+      "action": "DELETE",
+      "scope": "ALL"
+    },
+    {
+      "role": "ADMIN",
+      "object": "CASE_MASTER",
+      "action": "READ",
+      "scope": "ALL"
+    },
+    {
+      "role": "ADMIN",
+      "object": "CASE_MASTER",
+      "action": "UPDATE",
+      "scope": "ALL"
+    },
+    {
+      "role": "ADMIN",
+      "object": "CASE_MASTER",
+      "action": "DELETE",
+      "scope": "ALL"
+    },
+    {
+      "role": "ADMIN",
+      "object": "ORD_HEADER",
+      "action": "READ",
+      "scope": "ALL"
+    },
+    {
+      "role": "ADMIN",
+      "object": "ORD_HEADER",
+      "action": "UPDATE",
+      "scope": "ALL"
+    },
+    {
+      "role": "ADMIN",
+      "object": "USR_MASTER",
+      "action": "READ",
+      "scope": "ALL"
+    },
+    {
+      "role": "ADMIN",
+      "object": "USR_MASTER",
+      "action": "CREATE",
+      "scope": "ALL"
+    },
+    {
+      "role": "ADMIN",
+      "object": "USR_MASTER",
+      "action": "UPDATE",
+      "scope": "ALL"
+    },
+    {
+      "role": "ADMIN",
+      "object": "AUD_EVENT",
+      "action": "READ",
+      "scope": "ALL"
+    },
+    {
+      "role": "MGR",
+      "object": "ACCT_MASTER",
+      "action": "READ",
+      "scope": "ALL"
+    },
+    {
+      "role": "MGR",
+      "object": "ACCT_MASTER",
+      "action": "CREATE",
+      "scope": "TEAM"
+    },
+    {
+      "role": "MGR",
+      "object": "ACCT_MASTER",
+      "action": "UPDATE",
+      "scope": "TEAM"
+    },
+    {
+      "role": "MGR",
+      "object": "ACCT_MASTER",
+      "action": "EXPORT",
+      "scope": "TEAM"
+    },
+    {
+      "role": "MGR",
+      "object": "CONT_MASTER",
+      "action": "READ",
+      "scope": "ALL"
+    },
+    {
+      "role": "MGR",
+      "object": "CONT_MASTER",
+      "action": "CREATE",
+      "scope": "TEAM"
+    },
+    {
+      "role": "MGR",
+      "object": "CONT_MASTER",
+      "action": "UPDATE",
+      "scope": "TEAM"
+    },
+    {
+      "role": "MGR",
+      "object": "OPP_MASTER",
+      "action": "READ",
+      "scope": "TEAM"
+    },
+    {
+      "role": "MGR",
+      "object": "OPP_MASTER",
+      "action": "CREATE",
+      "scope": "TEAM"
+    },
+    {
+      "role": "MGR",
+      "object": "OPP_MASTER",
+      "action": "UPDATE",
+      "scope": "TEAM"
+    },
+    {
+      "role": "MGR",
+      "object": "OPP_MASTER",
+      "action": "DELETE",
+      "scope": "TEAM"
+    },
+    {
+      "role": "MGR",
+      "object": "CASE_MASTER",
+      "action": "READ",
+      "scope": "TEAM"
+    },
+    {
+      "role": "MGR",
+      "object": "CASE_MASTER",
+      "action": "UPDATE",
+      "scope": "TEAM"
+    },
+    {
+      "role": "MGR",
+      "object": "ORD_HEADER",
+      "action": "READ",
+      "scope": "TEAM"
+    },
+    {
+      "role": "MGR",
+      "object": "ORD_HEADER",
+      "action": "UPDATE",
+      "scope": "TEAM"
+    },
+    {
+      "role": "MGR",
+      "object": "USR_MASTER",
+      "action": "READ",
+      "scope": "TEAM"
+    },
+    {
+      "role": "REP",
+      "object": "ACCT_MASTER",
+      "action": "READ",
+      "scope": "TEAM"
+    },
+    {
+      "role": "REP",
+      "object": "ACCT_MASTER",
+      "action": "CREATE",
+      "scope": "OWN"
+    },
+    {
+      "role": "REP",
+      "object": "ACCT_MASTER",
+      "action": "UPDATE",
+      "scope": "OWN"
+    },
+    {
+      "role": "REP",
+      "object": "CONT_MASTER",
+      "action": "READ",
+      "scope": "TEAM"
+    },
+    {
+      "role": "REP",
+      "object": "CONT_MASTER",
+      "action": "CREATE",
+      "scope": "OWN"
+    },
+    {
+      "role": "REP",
+      "object": "CONT_MASTER",
+      "action": "UPDATE",
+      "scope": "OWN"
+    },
+    {
+      "role": "REP",
+      "object": "OPP_MASTER",
+      "action": "READ",
+      "scope": "OWN"
+    },
+    {
+      "role": "REP",
+      "object": "OPP_MASTER",
+      "action": "CREATE",
+      "scope": "OWN"
+    },
+    {
+      "role": "REP",
+      "object": "OPP_MASTER",
+      "action": "UPDATE",
+      "scope": "OWN"
+    },
+    {
+      "role": "REP",
+      "object": "CASE_MASTER",
+      "action": "READ",
+      "scope": "TEAM"
+    },
+    {
+      "role": "REP",
+      "object": "ORD_HEADER",
+      "action": "READ",
+      "scope": "OWN"
+    },
+    {
+      "role": "SUPP",
+      "object": "CASE_MASTER",
+      "action": "READ",
+      "scope": "ALL"
+    },
+    {
+      "role": "SUPP",
+      "object": "CASE_MASTER",
+      "action": "CREATE",
+      "scope": "ALL"
+    },
+    {
+      "role": "SUPP",
+      "object": "CASE_MASTER",
+      "action": "UPDATE",
+      "scope": "TEAM"
+    },
+    {
+      "role": "SUPP",
+      "object": "CONT_MASTER",
+      "action": "READ",
+      "scope": "ALL"
+    },
+    {
+      "role": "SUPP",
+      "object": "ACCT_MASTER",
+      "action": "READ",
+      "scope": "ALL"
+    },
+    {
+      "role": "AUDIT",
+      "object": "AUD_EVENT",
+      "action": "READ",
+      "scope": "ALL"
+    },
+    {
+      "role": "AUDIT",
+      "object": "ACCT_MASTER",
+      "action": "READ",
+      "scope": "ALL"
+    },
+    {
+      "role": "AUDIT",
+      "object": "OPP_MASTER",
+      "action": "READ",
+      "scope": "ALL"
+    },
+    {
+      "role": "AUDIT",
+      "object": "ORD_HEADER",
+      "action": "READ",
+      "scope": "ALL"
+    }
+  ]
+}

@@ -1,0 +1,2 @@
+# Excerpt of validation_rules.vrl (Meridian CRM 4.2): invoiced-order status rule.
+RULE ORD-003 ON ORD_HEADER WHEN UPDATE : NOT (OLD.STAT_CD = 'I' AND STAT_CD <> 'I' AND STAT_CD <> 'X') ELSE ERROR E5003 "Invoiced order can only be cancelled"

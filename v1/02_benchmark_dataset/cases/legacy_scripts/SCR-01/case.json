@@ -1,0 +1,17 @@
+{
+  "id": "SCR-01",
+  "title": "Migrate the order_totals CRMScript to a per-order recompute service",
+  "category": "legacy_scripts",
+  "difficulty": "easy",
+  "source_artifacts": ["legacy/order_totals.crms", "legacy/SEMANTICS_EXCERPT.md"],
+  "target_requirement": "Reimplement the nightly order-total recompute as a Python module exposing recompute(order, lines) -> (order, lines, audits): EXT_AMT = NVL(QTY,0)*NVL(UNIT_PRC,0) per live line, TOT_AMT = total*(100-NVL(DISC_PCT,0))/100 rounded half-up to cents, ORD_RETOTAL audit only when TOT_AMT changes numerically, cancelled (STAT_CD='X') and soft-deleted orders untouched, soft-deleted lines skipped and preserved.",
+  "expected_behavior": "recompute() returns copies with recomputed EXT_AMT/TOT_AMT; 59.97 at 15% discount yields 50.97 and an exact half cent (5.005) rounds up to 5.01; a numerically unchanged total emits no audit even when a stale line EXT_AMT is corrected; soft-deleted lines keep their stale values and do not contribute to the total; inputs are never mutated.",
+  "deliverables": ["migrated.py"],
+  "dependencies": {"python": ">=3.10", "packages": []},
+  "provenance": "Synthetic; authored for LegacyCRM-Bench from Meridian CRM 4.2 spec (SYSTEM_OVERVIEW.md §4) and scripts/order_totals.crms.",
+  "license": "Code: MIT; data/specs: CC BY 4.0",
+  "ground_truth_derivation": "GROUND_TRUTH.md",
+  "security_expectations": "No network access; the module must not import network or subprocess modules.",
+  "failure_conditions": "Using binary-float rounding (round()) so 5.005 rounds to 5.00; emitting ORD_RETOTAL when the total is unchanged; including soft-deleted lines in the total; recomputing cancelled or soft-deleted orders; mutating inputs.",
+  "num_tests": 13
+}

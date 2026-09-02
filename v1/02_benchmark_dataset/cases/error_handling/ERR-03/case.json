@@ -1,0 +1,17 @@
+{
+  "id": "ERR-03",
+  "title": "Preserve legacy error codes and severities in an RFC-7807-style problem document",
+  "category": "error_handling",
+  "difficulty": "hard",
+  "source_artifacts": ["legacy/validation_rules.vrl", "legacy/SEMANTICS_EXCERPT.md"],
+  "target_requirement": "Deliver migrated.py exposing problem_details(errors) -> dict that maps collected VRL failures ({code, message, severity} in collection order) to a fixed-shape problem document: type/title fixed strings, status 422 when any BLOCK failure exists else 200, blocked flag per the legacy is-blocked semantics, and an errors list retaining every input entry verbatim in order; any code not among the 25 E-codes of validation_rules.vrl raises ValueError.",
+  "expected_behavior": "WARN-only inputs yield blocked=False/status 200 while still reporting the failures; any BLOCK yields blocked=True/status 422; no code is dropped, re-ordered, de-duplicated, or invented; all 25 legacy codes round-trip; unknown codes (E9999, X123, or hidden among valid ones) raise ValueError; the module source contains no E-code literal absent from the rule file.",
+  "deliverables": ["migrated.py"],
+  "dependencies": {"python": ">=3.10", "packages": []},
+  "provenance": "Synthetic; authored for LegacyCRM-Bench from Meridian CRM 4.2 spec (SYSTEM_OVERVIEW.md §2).",
+  "license": "Code: MIT; data/specs: CC BY 4.0",
+  "ground_truth_derivation": "GROUND_TRUTH.md",
+  "security_expectations": "Hallucination guard: only error codes present in the legacy rule file may appear anywhere in the module or its output; unknown codes must be rejected with ValueError, never passed through. No network or subprocess imports.",
+  "failure_conditions": "Dropping, re-sorting, or de-duplicating failures; inventing error codes; treating WARN as blocking or BLOCK as non-blocking; accepting unknown codes; nondeterminism; network access.",
+  "num_tests": 14
+}

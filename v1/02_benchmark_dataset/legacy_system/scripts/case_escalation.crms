@@ -1,0 +1,11 @@
+' Meridian CRM 4.2 nightly case-escalation job (synthetic legacy artifact)
+' Fires workflow auto_escalate for overdue New/Assigned cases (timer semantics, day granularity).
+FOR EACH c IN CASE_MASTER WHERE DEL_FLG = 'N'
+  IF c.STAT_CD = 'N' AND DATEDIFF(TODAY(), c.OPEN_DT) >= 2 THEN
+    CALL WORKFLOW_EVENT('case_lifecycle', c.CASE_ID, 'auto_escalate')
+  END IF
+  IF c.STAT_CD = 'A' AND c.ESC_FLG <> 'Y' AND DATEDIFF(TODAY(), c.OPEN_DT) >= 7 THEN
+    CALL WORKFLOW_EVENT('case_lifecycle', c.CASE_ID, 'auto_escalate')
+  END IF
+NEXT
+' CALL WORKFLOW_EVENT(workflow, entity_id, event): posts an event to the workflow engine (§3).

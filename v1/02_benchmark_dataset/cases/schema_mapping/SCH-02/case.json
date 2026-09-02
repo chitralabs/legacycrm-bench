@@ -1,0 +1,17 @@
+{
+  "id": "SCH-02",
+  "title": "Map legacy CONT_MASTER rows to the modern contact shape with batch conversion",
+  "category": "schema_mapping",
+  "difficulty": "medium",
+  "source_artifacts": ["legacy/cont_master.sql", "legacy/data_dictionary_excerpt.csv", "legacy/SEMANTICS_EXCERPT.md"],
+  "target_requirement": "Deliver migrated.py exposing convert_contact(row) -> dict | None and convert_all(rows) -> list[dict] that map legacy CONT_MASTER rows to the modern 11-key contact shape per target_spec.md: PREF_CH code enum with blank defaulting to 'email', OPTOUT_FLG to marketing_optout bool, empty EMAIL_TX to None, sentinel dates to None, snake_case key rename; convert_all drops soft-deleted rows and preserves input order.",
+  "expected_behavior": "convert_contact returns None for DEL_FLG='Y' and otherwise a dict with exactly the 11 modern keys; PREF_CH E/P/M/blank map to email/phone/mail/email; OPTOUT_FLG 'Y' maps to True and 'N'/blank to False; blank EMAIL_TX maps to None; convert_all([r1, deleted, r3]) returns converted r1 then r3 with no None entries.",
+  "deliverables": ["migrated.py"],
+  "dependencies": {"python": ">=3.10", "packages": []},
+  "provenance": "Synthetic; authored for LegacyCRM-Bench from Meridian CRM 4.2 spec (SYSTEM_OVERVIEW.md §1).",
+  "license": "Code: MIT; data/specs: CC BY 4.0",
+  "ground_truth_derivation": "GROUND_TRUTH.md",
+  "security_expectations": "No network access; module must not import network or subprocess modules; soft-deleted contacts must never be emitted by convert_all.",
+  "failure_conditions": "Emitting soft-deleted contacts; reordering rows in convert_all; defaulting blank PREF_CH to anything but 'email'; leaking legacy column names; nondeterminism or I/O.",
+  "num_tests": 14
+}

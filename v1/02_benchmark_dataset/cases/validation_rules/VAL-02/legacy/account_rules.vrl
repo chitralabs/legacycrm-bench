@@ -1,0 +1,7 @@
+# Excerpt of validation_rules.vrl (Meridian CRM 4.2, synthetic legacy artifact)
+# --- Accounts ---
+RULE ACC-001 ON ACCT_MASTER WHEN INSERT,UPDATE : LEN(ACCT_NM) >= 2 ELSE ERROR E1001 "Account name too short"
+RULE ACC-002 ON ACCT_MASTER WHEN INSERT,UPDATE : ACCT_TYP = 'C' OR ACCT_TYP = 'P' OR ACCT_TYP = 'R' OR ACCT_TYP = 'X' ELSE ERROR E1002 "Invalid account type"
+RULE ACC-003 ON ACCT_MASTER WHEN INSERT,UPDATE : NVL(ANN_REV, 0) >= 0 ELSE ERROR E1003 "Annual revenue negative"
+RULE ACC-004 ON ACCT_MASTER WHEN UPDATE : NOT (OLD.CRED_HOLD = 'Y' AND CRED_HOLD = 'N' AND CRED_LIMIT <= 0) ELSE ERROR E1004 "Cannot release credit hold with zero credit limit"
+RULE ACC-005 ON ACCT_MASTER WHEN INSERT,UPDATE : LEN(REGION_CD) = 3 ELSE ERROR E1005 "Region code must be 3 chars" SEVERITY WARN

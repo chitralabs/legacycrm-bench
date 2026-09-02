@@ -1,0 +1,17 @@
+{
+  "id": "AUD-03",
+  "title": "Migrate legacy audit events to an append-only modern store with ISO-8601 timestamps",
+  "category": "audit_logging",
+  "difficulty": "hard",
+  "source_artifacts": ["legacy/legacy_schema.sql", "legacy/aud_event_sample.csv", "legacy/SEMANTICS_EXCERPT.md"],
+  "target_requirement": "Deliver migrated.py with migrate_event(row) mapping AUD_EVENT CSV rows to modern events (EVT_TS YYYYMMDDHHMMSS re-sliced to YYYY-MM-DDTHH:MM:SS, evt_id as int, all other fields verbatim under modern names), an AuditStore class whose only mutator is append() (events() returns defensive copies, len() counts events), and migrate(rows, store=None) that inserts events in ascending numeric EVT_ID order and skips evt_ids already present (idempotent re-migration).",
+  "expected_behavior": "Timestamps convert by pure slicing including midnight and end-of-day; shuffled input lands in numeric EVT_ID order (10/2/31/4 -> 2/4/10/31); re-migrating the same or overlapping batches never duplicates events; the store exposes no update/delete/remove/pop/clear/replace/item-assignment surface; mutating snapshots returned by events() leaves the store unchanged.",
+  "deliverables": ["migrated.py"],
+  "dependencies": {"python": ">=3.10", "packages": []},
+  "provenance": "Synthetic; authored for LegacyCRM-Bench from Meridian CRM 4.2 spec (SYSTEM_OVERVIEW.md §8).",
+  "license": "Code: MIT; data/specs: CC BY 4.0",
+  "ground_truth_derivation": "GROUND_TRUTH.md",
+  "security_expectations": "Append-only audit integrity must be preserved: no API may update, delete, or reorder stored events; defensive copies prevent aliasing mutations; re-migration must not duplicate or drop history. No network or subprocess imports.",
+  "failure_conditions": "Any mutable update/delete surface on the store; lexicographic instead of numeric EVT_ID ordering; duplicated events on re-migration; timestamp arithmetic via datetime clock reads; nondeterminism; network access.",
+  "num_tests": 14
+}

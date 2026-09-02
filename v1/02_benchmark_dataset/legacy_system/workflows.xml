@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Meridian CRM 4.2 workflow definitions (synthetic legacy artifact; semantics in SYSTEM_OVERVIEW.md §3) -->
+<workflows>
+  <workflow name="opportunity_pipeline" entity="OPP_MASTER" state_field="STAT_CD">
+    <states>
+      <state code="P" initial="true"/>
+      <state code="Q"/>
+      <state code="N"/>
+      <state code="W"/>
+      <state code="L"/>
+    </states>
+    <transition from="P" to="Q" event="qualify">
+      <guard>NVL(AMT,0) &gt; 0</guard>
+      <actions><set field="STAGE_PCT" value="25"/><audit code="OPP_QUAL"/></actions>
+    </transition>
+    <transition from="Q" to="N" event="advance">
+      <actions><set field="STAGE_PCT" value="60"/></actions>
+    </transition>
+    <transition from="N" to="W" event="close_won">
+      <guard>CLOSE_DT &lt;&gt; '00000000'</guard>
+      <actions><set field="STAGE_PCT" value="100"/><audit code="OPP_WON"/><notify template="won_deal"/></actions>
+    </transition>
+    <transition from="P" to="L" event="close_lost">
+      <guard>LOST_RSN &lt;&gt; ''</guard>
+      <actions><set field="STAGE_PCT" value="0"/><audit code="OPP_LOST"/></actions>
+    </transition>
+    <transition from="Q" to="L" event="close_lost">
+      <guard>LOST_RSN &lt;&gt; ''</guard>
+      <actions><set field="STAGE_PCT" value="0"/><audit code="OPP_LOST"/></actions>
+    </transition>
+    <transition from="N" to="L" event="close_lost">
+      <guard>LOST_RSN &lt;&gt; ''</guard>
+      <actions><set field="STAGE_PCT" value="0"/><audit code="OPP_LOST"/></actions>
+    </transition>
+  </workflow>
+
+  <workflow name="case_lifecycle" entity="CASE_MASTER" state_field="STAT_CD">
+    <states>
+      <state code="N" initial="true">
+        <timer after_days="2" event="auto_escalate"/>
+      </state>
+      <state code="A">
+        <timer after_days="7" event="auto_escalate"/>
+      </state>
+      <state code="P"/>
+      <state code="R"/>
+      <state code="X"/>
+    </states>
+    <transition from="N" to="A" event="assign">
+      <guard>OWNER_UID &lt;&gt; ''</guard>
+      <actions><audit code="CASE_ASSIGN"/></actions>
+    </transition>
+    <transition from="N" to="A" event="auto_escalate">
+      <actions><set field="ESC_FLG" value="Y"/><set field="SEV_CD" value="=NVL(SEV_CD,'3')"/><audit code="CASE_ESC"/><notify template="escalation"/></actions>
+    </transition>
+    <transition from="A" to="A" event="auto_escalate">
+      <guard>ESC_FLG &lt;&gt; 'Y'</guard>
+      <actions><set field="ESC_FLG" value="Y"/><audit code="CASE_ESC"/><notify template="escalation"/></actions>
+    </transition>
+    <transition from="A" to="P" event="await_customer">
+      <actions><audit code="CASE_PEND"/></actions>
+    </transition>
+    <transition from="P" to="A" event="customer_reply"/>
+    <transition from="A" to="R" event="resolve">
+      <guard>RES_DT &lt;&gt; '00000000'</guard>
+      <actions><audit code="CASE_RES"/></actions>
+    </transition>
+    <transition from="R" to="X" event="close">
+      <actions><audit code="CASE_CLOSE"/></actions>
+    </transition>
+    <transition from="R" to="A" event="reopen">
+      <actions><set field="RES_DT" value="00000000"/><audit code="CASE_REOPEN"/></actions>
+    </transition>
+  </workflow>
+
+  <workflow name="order_fulfilment" entity="ORD_HEADER" state_field="STAT_CD">
+    <states>
+      <state code="E" initial="true"/>
+      <state code="A"/>
+      <state code="S"/>
+      <state code="I"/>
+      <state code="X"/>
+    </states>
+    <transition from="E" to="A" event="approve">
+      <guard>NVL(TOT_AMT,0) &gt; 0</guard>
+      <actions><audit code="ORD_APPR"/></actions>
+    </transition>
+    <transition from="A" to="S" event="ship">
+      <actions><audit code="ORD_SHIP"/><notify template="shipped"/></actions>
+    </transition>
+    <transition from="S" to="I" event="invoice">
+      <actions><audit code="ORD_INV"/></actions>
+    </transition>
+    <transition from="E" to="X" event="cancel">
+      <actions><audit code="ORD_CANC"/></actions>
+    </transition>
+    <transition from="A" to="X" event="cancel">
+      <guard>LOOKUP(ACCT_MASTER, ACCT_ID, ACCT_ID, CRED_HOLD) &lt;&gt; 'Y'</guard>
+      <actions><audit code="ORD_CANC"/></actions>
+    </transition>
+    <transition from="I" to="X" event="cancel">
+      <actions><audit code="ORD_CANC_INV"/><notify template="credit_note"/></actions>
+    </transition>
+  </workflow>
+</workflows>

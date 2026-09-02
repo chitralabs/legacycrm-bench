@@ -1,0 +1,17 @@
+{
+  "id": "WFL-03",
+  "title": "Migrate the order_fulfilment workflow with LOOKUP-guarded cancellation",
+  "category": "workflows",
+  "difficulty": "hard",
+  "source_artifacts": ["legacy/order_fulfilment.xml", "legacy/SEMANTICS_EXCERPT.md"],
+  "target_requirement": "Reimplement the order_fulfilment workflow as a Python module exposing fire(state, event, record, tables) that returns {state, record, audits, notifies, matched}, preserving legacy engine semantics: first-match-in-document-order with the three cancel transitions distinguished by from-state, the A->X cancel guard LOOKUP(ACCT_MASTER, ACCT_ID, ACCT_ID, CRED_HOLD) <> 'Y' evaluated against live rows only, NVL/empty-string numeric coercion on the approve guard, and the WF_NOMATCH no-op.",
+  "expected_behavior": "approve fires only for positive TOT_AMT; cancelling an approved order is blocked (WF_NOMATCH) when a live account row has CRED_HOLD='Y' but allowed when the account is missing or soft-deleted (LOOKUP returns empty string); cancelling an invoiced order emits ORD_CANC_INV plus a credit_note notify and never plain ORD_CANC; cancel from S or X is a WF_NOMATCH no-op; inputs are never mutated.",
+  "deliverables": ["migrated.py"],
+  "dependencies": {"python": ">=3.10", "packages": []},
+  "provenance": "Synthetic; authored for LegacyCRM-Bench from Meridian CRM 4.2 spec (SYSTEM_OVERVIEW.md §3, §2) and workflows.xml.",
+  "license": "Code: MIT; data/specs: CC BY 4.0",
+  "ground_truth_derivation": "GROUND_TRUTH.md",
+  "security_expectations": "No network access; the module must not import network or subprocess modules; the credit-hold block must not be bypassable by mutating input tables (inputs are read-only data).",
+  "failure_conditions": "Matching cancel on event name alone (firing E->X or emitting ORD_CANC for an invoiced order); honoring CRED_HOLD on soft-deleted account rows; treating a blocked cancel as an error or as a fired transition; mutating input record or tables.",
+  "num_tests": 17
+}

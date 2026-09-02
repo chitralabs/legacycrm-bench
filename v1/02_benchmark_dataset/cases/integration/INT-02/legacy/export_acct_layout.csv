@@ -1,0 +1,7 @@
+DICT_TYPE,TABLE_NM,COL_NM,POSITION,LENGTH,MEANING
+LAYOUT,EXPORT_ACCT,ACCT_ID,1,10,"left-aligned, space-padded right"
+LAYOUT,EXPORT_ACCT,ACCT_NM,11,40,"left-aligned, space-padded, truncated at 40"
+LAYOUT,EXPORT_ACCT,REGION_CD,51,3,"left-aligned"
+LAYOUT,EXPORT_ACCT,ANN_REV,54,15,"right-aligned, zero-padded, implied 2 decimals (cents)"
+LAYOUT,EXPORT_ACCT,CRED_HOLD,69,1,"Y or N; blank written as N"
+LAYOUT,EXPORT_ACCT,CREATE_DT,70,8,"YYYYMMDD; 00000000 if null"

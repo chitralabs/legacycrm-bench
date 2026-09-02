@@ -1,0 +1,3 @@
+# Excerpt of validation_rules.vrl (Meridian CRM 4.2): ORD_HEADER discount rules.
+RULE ORD-001 ON ORD_HEADER WHEN INSERT,UPDATE : DISC_PCT >= 0 AND DISC_PCT <= 100 ELSE ERROR E5001 "Discount out of range"
+RULE ORD-002 ON ORD_HEADER WHEN UPDATE : NOT (DISC_PCT > 20 AND LOOKUP(USR_MASTER, USR_ID, OWNER_UID, ROLE_ID) <> 'MGR' AND LOOKUP(USR_MASTER, USR_ID, OWNER_UID, ROLE_ID) <> 'ADMIN') ELSE ERROR E5002 "Discount over 20 percent requires manager role"

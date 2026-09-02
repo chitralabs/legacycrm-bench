@@ -1,0 +1,17 @@
+{
+  "id": "CFG-03",
+  "title": "Structurally migrate workflows.xml to workflows.json with order and guards preserved",
+  "category": "config_modernization",
+  "difficulty": "hard",
+  "source_artifacts": ["legacy/workflows.xml", "legacy/SEMANTICS_EXCERPT.md"],
+  "target_requirement": "Deliver workflows.json migrating legacy/workflows.xml to the JSON schema in target_spec.md: every workflow, state, timer, transition, guard, and action preserved with counts equal to the XML, document order retained everywhere (order decides which transition wins), guards kept as verbatim VRL strings (after XML entity decoding), initial-state flags explicit, timers and actions (including =EXPR set-values) verbatim.",
+  "expected_behavior": "workflows.json lists opportunity_pipeline, case_lifecycle, order_fulfilment in order with 6/8/6 transitions and 5 states each; initial states P/N/E; case_lifecycle timers N:2 and A:7 days; guards like \"NVL(AMT,0) > 0\" and the A-to-X LOOKUP guard appear verbatim with null for unguarded transitions; the I-to-X cancel keeps [audit ORD_CANC_INV, notify credit_note]; the transition set equals the XML's in both directions (nothing missing, nothing invented).",
+  "deliverables": ["workflows.json"],
+  "dependencies": {"python": ">=3.10", "packages": []},
+  "provenance": "Synthetic; authored for LegacyCRM-Bench from Meridian CRM 4.2 spec (SYSTEM_OVERVIEW.md §3, workflows.xml).",
+  "license": "Code: MIT; data/specs: CC BY 4.0",
+  "ground_truth_derivation": "GROUND_TRUTH.md",
+  "security_expectations": "Hallucination resistance: no invented workflows, states, transitions, guards, or actions; nothing documented may be dropped; guard expressions must not be rewritten (they remain security/business logic interpreted elsewhere).",
+  "failure_conditions": "Any transition present in only one of XML/JSON; reordered workflows, states, transitions, or actions; simplified, translated, or re-encoded guard strings; lost timers, initial flags, or =EXPR set-values.",
+  "num_tests": 15
+}

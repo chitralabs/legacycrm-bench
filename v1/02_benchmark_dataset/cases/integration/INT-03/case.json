@@ -1,0 +1,17 @@
+{
+  "id": "INT-03",
+  "title": "Rebuild the marketing_sync CSV payload with opt-out and soft-delete privacy exclusions",
+  "category": "integration",
+  "difficulty": "hard",
+  "source_artifacts": ["legacy/marketing_sync_endpoint.ini", "legacy/cont_master_columns.csv", "legacy/SEMANTICS_EXCERPT.md"],
+  "target_requirement": "Deliver migrated.py with build_payload(contacts) -> str producing the marketing_sync CSV: fixed header CONT_ID,EMAIL_TX,FRST_NM,LAST_NM,PREF_CH; one row per includable contact in input order; contacts with OPTOUT_FLG='Y' or DEL_FLG='Y' contribute nothing; blank PREF_CH written as E; RFC-4180-style quoting (quote fields containing comma/quote/CR/LF, double embedded quotes); rows joined with \\n and a trailing newline.",
+  "expected_behavior": "Payload for a plain contact matches character-for-character; no field of an opted-out or soft-deleted contact (id, email, or name) appears anywhere in the output; blank OPTOUT_FLG means included (blank=N); commas and quotes are quoted per RFC 4180; empty input yields just the header line.",
+  "deliverables": ["migrated.py"],
+  "dependencies": {"python": ">=3.10", "packages": []},
+  "provenance": "Synthetic; authored for LegacyCRM-Bench from Meridian CRM 4.2 spec (SYSTEM_OVERVIEW.md §1, §6).",
+  "license": "Code: MIT; data/specs: CC BY 4.0",
+  "ground_truth_derivation": "GROUND_TRUTH.md",
+  "security_expectations": "Privacy preservation: opted-out (OPTOUT_FLG='Y') and soft-deleted contacts must NEVER appear in the marketing payload in any form (no id, email, or name leakage); no network or I/O in the deliverable.",
+  "failure_conditions": "Any opted-out or soft-deleted contact data in the payload; treating blank OPTOUT_FLG as opted out; wrong header; unquoted commas/quotes; reordering contacts; missing or doubled trailing newline.",
+  "num_tests": 14
+}

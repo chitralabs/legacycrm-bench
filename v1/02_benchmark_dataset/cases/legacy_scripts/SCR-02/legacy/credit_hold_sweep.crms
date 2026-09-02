@@ -1,0 +1,19 @@
+' Meridian CRM 4.2 nightly credit-hold sweep (synthetic legacy artifact; CRMScript semantics in SYSTEM_OVERVIEW.md §4)
+' Places accounts on credit hold when open invoiced exposure exceeds the credit limit.
+FOR EACH acct IN ACCT_MASTER WHERE DEL_FLG = 'N' AND ACCT_TYP = 'C'
+  LET exposure = 0
+  FOR EACH ord IN ORD_HEADER WHERE ACCT_ID = acct.ACCT_ID AND DEL_FLG = 'N'
+    IF ord.STAT_CD = 'I' THEN
+      LET exposure = exposure + NVL(ord.TOT_AMT, 0)
+    END IF
+  NEXT
+  IF exposure > NVL(acct.CRED_LIMIT, 0) AND acct.CRED_HOLD <> 'Y' THEN
+    UPDATE acct SET CRED_HOLD = 'Y'
+    CALL AUDIT('CRED_HOLD_ON', acct.ACCT_ID)
+  END IF
+  IF exposure <= NVL(acct.CRED_LIMIT, 0) * 8 / 10 AND acct.CRED_HOLD = 'Y' THEN
+    ' release only when exposure is at or below 80% of limit (hysteresis)
+    UPDATE acct SET CRED_HOLD = 'N'
+    CALL AUDIT('CRED_HOLD_OFF', acct.ACCT_ID)
+  END IF
+NEXT

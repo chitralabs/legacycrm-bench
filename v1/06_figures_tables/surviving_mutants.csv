@@ -1,0 +1,12 @@
+case_id,file,node_index,operator,passed,collected
+AUD-01,migrated.py,52,SVR:'#',12,12
+BAT-01,migrated.py,87,SVR:'#',13,13
+BIZ-01,migrated.py,142,SVR:': ',11,11
+BIZ-02,migrated.py,175,SVR:': ',14,14
+CFG-02,migrated.py,90,SVR:'USD',16,16
+INT-02,migrated.py,62,SVR:'0',17,17
+SCR-01,migrated.py,242,SVR:'N',13,13
+SCR-03,migrated.py,11,SVR:'00000000',18,18
+RBC-03,migrated.py,169,CBR:bool,12,12
+VAL-02,migrated.py,59,SVR:'INSERT',16,16
+VAL-02,migrated.py,123,SVR:'INSERT',16,16

@@ -1,0 +1,17 @@
+{
+  "id": "ERR-02",
+  "title": "Migrate endpoint retry semantics to a transport-injected retry wrapper",
+  "category": "error_handling",
+  "difficulty": "medium",
+  "source_artifacts": ["legacy/endpoints.ini", "legacy/SEMANTICS_EXCERPT.md"],
+  "target_requirement": "Deliver migrated.py exporting TransientError/PermanentError and call_with_retry(endpoint_cfg, transport) -> result dict: at most retry+1 transport attempts where only transient errors are retried, permanent errors stop immediately, url/timeout_ms are passed to the injected transport on every attempt, and the outcome dict {ok, attempts, result, error} replaces raised exceptions.",
+  "expected_behavior": "With endpoints.ini values: erp_orders (retry=3) makes exactly 4 attempts on persistent transient failure and stops early on success; notifier (retry=0) makes exactly 1 attempt; a permanent error yields attempts==1 (or stops a retry sequence where it occurs) with error type 'permanent' and message str(exception); no exception propagates; failure results carry result=None.",
+  "deliverables": ["migrated.py"],
+  "dependencies": {"python": ">=3.10", "packages": []},
+  "provenance": "Synthetic; authored for LegacyCRM-Bench from Meridian CRM 4.2 spec (SYSTEM_OVERVIEW.md §6, §7).",
+  "license": "Code: MIT; data/specs: CC BY 4.0",
+  "ground_truth_derivation": "GROUND_TRUTH.md",
+  "security_expectations": "No real network access: the transport is injected and the module must not import network modules; permanent failures must never be retried (retry storms against a rejecting endpoint are a failure).",
+  "failure_conditions": "Off-by-one attempt counts (retry instead of retry+1); retrying permanent errors; letting transport exceptions escape; sleeping/backoff timing; nondeterminism; network access.",
+  "num_tests": 14
+}

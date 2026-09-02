@@ -1,0 +1,17 @@
+{
+  "id": "WFL-01",
+  "title": "Migrate the opportunity_pipeline XML workflow to a Python transition function",
+  "category": "workflows",
+  "difficulty": "easy",
+  "source_artifacts": ["legacy/opportunity_pipeline.xml", "legacy/SEMANTICS_EXCERPT.md"],
+  "target_requirement": "Reimplement the opportunity_pipeline workflow as a Python module exposing fire(state, event, record) that returns {state, record, audits, notifies, matched}, preserving legacy engine semantics: guard evaluation with VRL coercions (empty string to 0, sentinel date equality), first-match-in-document-order transition selection, set actions applied after the state change in order, and the WF_NOMATCH no-op for unmatched events.",
+  "expected_behavior": "fire() returns the new state with set/audit/notify actions of the fired transition applied in order; a guarded transition whose guard is FALSE does not fire; an event with no matching transition returns the same state, an unmodified record copy, audits ['WF_NOMATCH'], and matched False; the input record is never mutated.",
+  "deliverables": ["migrated.py"],
+  "dependencies": {"python": ">=3.10", "packages": []},
+  "provenance": "Synthetic; authored for LegacyCRM-Bench from Meridian CRM 4.2 spec (SYSTEM_OVERVIEW.md §3) and workflows.xml.",
+  "license": "Code: MIT; data/specs: CC BY 4.0",
+  "ground_truth_derivation": "GROUND_TRUTH.md",
+  "security_expectations": "No network access; the module must not import network or subprocess modules; notify actions are returned as data, never dispatched.",
+  "failure_conditions": "Treating an unmatched event as an error instead of a WF_NOMATCH no-op; mutating the input record; applying set actions when the guard failed; skipping guard evaluation; nondeterminism.",
+  "num_tests": 15
+}

@@ -1,0 +1,17 @@
+{
+  "id": "BIZ-01",
+  "title": "Preserve the credit-hold release guard (ACC-004) as a modern account service",
+  "category": "business_rules",
+  "difficulty": "easy",
+  "source_artifacts": ["legacy/account_rules.vrl", "legacy/credit_hold_sweep.crms", "legacy/SEMANTICS_EXCERPT.md"],
+  "target_requirement": "Deliver migrated.py with release_credit_hold(account) -> (account, audits) and a BusinessRuleViolation exception: only a Y->N release with CRED_LIMIT > 0 succeeds (emitting one CRED_HOLD_OFF audit keyed by ACCT_ID); zero, negative, or blank CRED_LIMIT raises E1004 with the legacy message; releasing an account not on hold is a vacuous no-op with no audit.",
+  "expected_behavior": "Successful release flips only CRED_HOLD to N and audits exactly [{code: CRED_HOLD_OFF, entity_id: ACCT_ID}]; CRED_LIMIT of 0, -100, or blank raises BusinessRuleViolation with code E1004 and the legacy message; blank CRED_HOLD means not on hold; inputs are never mutated.",
+  "deliverables": ["migrated.py"],
+  "dependencies": {"python": ">=3.10", "packages": []},
+  "provenance": "Synthetic; authored for LegacyCRM-Bench from Meridian CRM 4.2 spec (SYSTEM_OVERVIEW.md §1, §2, §4).",
+  "license": "Code: MIT; data/specs: CC BY 4.0",
+  "ground_truth_derivation": "GROUND_TRUTH.md",
+  "security_expectations": "No network or subprocess imports; the guard must not be bypassable by blank/missing CRED_LIMIT (coerces to 0 and is rejected).",
+  "failure_conditions": "Releasing with zero/blank credit limit; auditing a vacuous release; dropping the legacy code E1004 or its message; mutating the input account; changing fields other than CRED_HOLD.",
+  "num_tests": 11
+}

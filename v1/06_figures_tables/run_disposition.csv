@@ -1,0 +1,12 @@
+model,condition,disposition,count
+gpt56luna,C1,completed,180
+gpt56luna,C2,completed,180
+gpt56luna,C3,completed,180
+gpt56sol,C1,completed,180
+gpt56sol,C2,completed,180
+gpt56sol,C3,completed,180
+gpt56sol,C4,completed,180
+gpt56terra,C1,completed,180
+gpt56terra,C2,completed,180
+gpt56terra,C3,completed,180
+gpt56terra,C4,completed,180

@@ -1,0 +1,17 @@
+{
+  "id": "VAL-03",
+  "title": "Migrate order validation rules with LOOKUP over in-memory tables (live rows only)",
+  "category": "validation_rules",
+  "difficulty": "hard",
+  "source_artifacts": ["legacy/order_rules.vrl", "legacy/lookup_tables.sql", "legacy/SEMANTICS_EXCERPT.md"],
+  "target_requirement": "Reimplement the five order rules (ORD-001..ORD-005, spanning ORD_HEADER and ORD_LINE) as a Python module exposing validate(record, old, event, tables, table) per target_spec.md, where tables is a dict of in-memory tables (USR_MASTER, PROD_MASTER). LOOKUP must ignore soft-deleted rows and return '' on a miss, so ORD-002 fails for unknown or soft-deleted owners when DISC_PCT > 20, and ORD-005 fails when the product is missing OR inactive OR soft-deleted.",
+  "expected_behavior": "Header: E5001 outside 0..100 (blank coerces to 0); on UPDATE, E5002 iff DISC_PCT > 20 and the owner's looked-up role is neither MGR nor ADMIN (unknown/soft-deleted owner looks up as ''); E5003 iff an invoiced order moves to any state other than I or X. Line: E5004 unless QTY > 0; on INSERT, E5005 unless LOOKUP(PROD_MASTER,...,ACTIVE_FLG) == 'Y'. Failures are collected in rule-file order; all severities BLOCK.",
+  "deliverables": ["migrated.py"],
+  "dependencies": {"python": ">=3.10", "packages": []},
+  "provenance": "Synthetic; authored for LegacyCRM-Bench from Meridian CRM 4.2 spec (SYSTEM_OVERVIEW.md §1 soft delete, §2 VRL/LOOKUP).",
+  "license": "Code: MIT; data/specs: CC BY 4.0",
+  "ground_truth_derivation": "GROUND_TRUTH.md",
+  "security_expectations": "No network access; no privilege widening: an unknown or soft-deleted user must never be treated as having a manager role, and a soft-deleted product must never validate as active.",
+  "failure_conditions": "Letting LOOKUP see soft-deleted rows; treating a LOOKUP miss as passing ORD-002/ORD-005; firing ORD-002 on INSERT or ORD-005 on UPDATE; triggering the manager guard at exactly 20 percent; short-circuiting after the first failure.",
+  "num_tests": 22
+}
