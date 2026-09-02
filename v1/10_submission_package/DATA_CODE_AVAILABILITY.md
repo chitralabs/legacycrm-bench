@@ -6,12 +6,11 @@ deterministic seed-data generator, the evaluation harness, mutation-analysis and
 scripts, raw result files, and the reproduction guide — is intended for public release under
 MIT (code) and CC BY 4.0 (data/specifications).
 
-**Blocker (2026-09-01):** no public repository or archival deposit exists yet. Before
-submission the authors must: (1) publish the artifact to a public repository (e.g., GitHub) and
-an archival service with DOI (e.g., Zenodo or IEEE DataPort, which the OJ-CS audit notes IEEE
-encourages); (2) insert the concrete URLs/DOI here and in the manuscript's Data Availability
-section; (3) verify the release contains no personal data or credentials (it contains none by
-construction; run the release checklist in FINAL_SUBMISSION_CHECKLIST.md).
+**Published 2026-09-02:** https://github.com/chitralabs/legacycrm-bench (public, tag v0.1),
+released per RELEASE_MANIFEST.md with a clean credential-pattern scan. Remaining before
+submission: (1) archival DOI deposit (Zenodo or IEEE DataPort — requires the author's
+account); (2) insert the DOI here and in the manuscript; (3) second-platform reproduction
+log.
 
 Model-evaluation raw outputs now exist (executed 2026-09-01/02): immutable per-call JSON in
 `04_experiments/raw_outputs/`, per-run JSONL + SHA-256 manifests in `05_results/model_runs/`,
