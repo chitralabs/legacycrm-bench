@@ -7,10 +7,11 @@ scripts, raw result files, and the reproduction guide — is intended for public
 MIT (code) and CC BY 4.0 (data/specifications).
 
 **Published 2026-09-02:** https://github.com/chitralabs/legacycrm-bench (public, tag v0.1),
-released per RELEASE_MANIFEST.md with a clean credential-pattern scan. Remaining before
-submission: (1) archival DOI deposit (Zenodo or IEEE DataPort — requires the author's
-account); (2) insert the DOI here and in the manuscript; (3) second-platform reproduction
-log.
+released per RELEASE_MANIFEST.md with a clean credential-pattern scan. Archival DOI minted 2026-09-15 via the author's Zenodo–GitHub integration:
+**concept DOI 10.5281/zenodo.22777518** (version DOI 10.5281/zenodo.22777519, release v0.1.1). Second-platform
+reproduction: continuous Linux CI (run 35020703092 archived in
+08_supplementary_material/SECOND_PLATFORM_REPRODUCTION.md). **All availability items are
+complete.**
 
 Model-evaluation raw outputs now exist (executed 2026-09-01/02): immutable per-call JSON in
 `04_experiments/raw_outputs/`, per-run JSONL + SHA-256 manifests in `05_results/model_runs/`,

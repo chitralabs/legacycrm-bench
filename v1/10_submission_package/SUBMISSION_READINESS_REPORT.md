@@ -31,7 +31,7 @@ acceptance is implied.
 |---|---|---|---|
 | B2 | CLOSED 2026-09-15 | Author details integrated 2026-09-02; final-approval and no-COI attestations confirmed by the author in session 2026-09-15 | — |
 | B3 | CLOSED 2026-09-02 | Ported to the official IEEE Open Journals class (ieeetj.cls, author-supplied Template Selector zip); compiles clean at 10 of 12 pages; see ../../v2/ | — |
-| B4 | PARTIALLY CLOSED | Public repo LIVE since 2026-09-02: github.com/chitralabs/legacycrm-bench (tag v0.1, clean credential scan, URL in both manuscripts). Second-platform reproduction DONE 2026-09-15 (Linux CI, run 35020703092, continuous on every push; 08_supplementary_material/SECOND_PLATFORM_REPRODUCTION.md). Remaining: archival DOI only (author's Zenodo toggle) |
+| B4 | CLOSED 2026-09-15 | Public repo LIVE since 2026-09-02: github.com/chitralabs/legacycrm-bench (tag v0.1, clean credential scan, URL in both manuscripts). CLOSED 2026-09-15: repo live + Linux CI reproduction (run 35020703092) + Zenodo archival DOI 10.5281/zenodo.22777518 minted via the author's account and inserted into both manuscripts |
 | B5 | MAJOR | Five unverified journal facts (page-limit hardness, abstract limit, EiC, template class, AI-form field) | Confirm via pages/contacts in `OJCS_CURRENT_REQUIREMENTS.md` §UNVERIFIED |
 | B7 | MAJOR | Independent human re-derivation audit of a ground-truth sample (reviewer BM-02) | Sample-based re-derivation; archive in `09_peer_review_audit/` |
 | B8 | CLOSED 2026-09-15 | Cover letter + AI-use disclosure complete; author sign-off recorded | — |
