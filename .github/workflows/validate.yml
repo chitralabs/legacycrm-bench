@@ -1,0 +1,78 @@
+name: offline-validation
+# Second-platform reproduction (Linux) of everything rerunnable without API keys or the
+# macOS sandbox: seed determinism, case validation, reference/null runs compared per-test
+# against the archived logs, mutation analysis compared against archived kill results, and
+# regeneration of every analysis table from the archived raw logs with a clean git diff.
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    defaults:
+      run:
+        working-directory: v1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install pinned dependencies
+        run: pip install -r 03_source_code/requirements.txt
+      - name: Seed-data determinism (regenerate; must match committed bytes)
+        run: |
+          python 03_source_code/generate_seed_data.py
+          git diff --exit-code -- 02_benchmark_dataset/legacy_system/seed_data
+      - name: Structural validation (36 cases, 0 errors)
+        run: python 03_source_code/harness/validate_cases.py
+      - name: Reference validation (rerun; compare per-test against archived log)
+        run: |
+          python 03_source_code/harness/run_all.py --solution reference --out /tmp/ref.jsonl
+          python - <<'PY'
+          import json
+          def load(p):
+              out = {}
+              for line in open(p):
+                  d = json.loads(line)
+                  if "_meta" in d: continue
+                  out[d["case_id"]] = sorted((t["nodeid"].split("::")[-1], t["outcome"]) for t in d["tests"])
+              return out
+          a, b = load("/tmp/ref.jsonl"), load("05_results/reference_validation.jsonl")
+          assert a == b, "reference outcomes differ from archived log"
+          n = sum(len(v) for v in a.values())
+          assert n == 521, f"expected 521 tests, saw {n}"
+          print(f"reference reproduction OK: {len(a)} cases, {n} tests identical to archive")
+          PY
+      - name: Null-baseline control (rerun; must pass 0 tests)
+        run: |
+          python 03_source_code/harness/run_all.py --solution null --out /tmp/null.jsonl
+          python - <<'PY'
+          import json
+          rows = [json.loads(l) for l in open("/tmp/null.jsonl") if "_meta" not in l]
+          assert all(r["num_passed"] == 0 for r in rows), "null baseline passed a test"
+          print(f"null control OK: 0 passes across {len(rows)} cases")
+          PY
+      - name: Mutation analysis (rerun; compare kill outcomes against archived)
+        run: |
+          python 03_source_code/harness/mutation_check.py --out /tmp/mut.jsonl --cap 12
+          python - <<'PY'
+          import json
+          def load(p):
+              return sorted((d["case_id"], d["file"], d["node_index"], d["operator"], d["killed"])
+                            for d in map(json.loads, open(p)) if "_meta" not in d)
+          a, b = load("/tmp/mut.jsonl"), load("05_results/mutation_results.jsonl")
+          assert a == b, "mutation outcomes differ from archived log"
+          killed = sum(1 for r in a if r[4])
+          print(f"mutation reproduction OK: {len(a)} mutants, {killed} killed, identical to archive")
+          PY
+      - name: Regenerate all analysis tables from archived raw logs (must match committed)
+        run: |
+          python 03_source_code/analysis/aggregate.py
+          python 03_source_code/analysis/model_analysis.py
+          python 03_source_code/analysis/make_tex_tables.py
+          python 03_source_code/analysis/make_bib.py
+          git diff --exit-code -- 06_figures_tables 07_manuscript/generated 07_manuscript/refs.bib
+          echo "all tables, macros, and bibliography regenerate byte-identically"
