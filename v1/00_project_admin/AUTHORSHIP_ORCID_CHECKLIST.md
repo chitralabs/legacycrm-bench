@@ -14,9 +14,9 @@ Corresponding author: Chitrapradha Ganesan.
 Per IEEE authorship policy, at submission the author confirms:
 - [x] Significant intellectual contribution (conception, direction, review of design/analysis)
 - [x] Participated in drafting/critically revising (directed and reviewed AI-assisted drafting; see AI_USE_DISCLOSURE.md)
-- [ ] Approves the final version and agrees to be accountable (tick at submission)
+- [x] Approves the final version and agrees to be accountable (confirmed by the author in session, 2026-09-15)
 - [x] Registered ORCID recorded above
-- [ ] Conflicts of interest and funding disclosed (statement drafted as "none"; confirm)
+- [x] Conflicts of interest and funding disclosed: none (confirmed by the author in session, 2026-09-15)
 - [x] No AI system listed as an author
 
 Note: IEEE Senior Membership qualifies for the member APC discount (see blockers B9).

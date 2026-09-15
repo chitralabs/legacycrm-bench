@@ -29,12 +29,12 @@ acceptance is implied.
 
 | # | Severity | Blocker | Required action |
 |---|---|---|---|
-| B2 | NEARLY CLOSED | Author details, ORCID, bio, contributions, and cover-letter signature integrated 2026-09-02 (single author: C. Ganesan, Senior Member IEEE, sourced from her IEEE Access manuscript at her direction). Residual: author ticks the final-approval and COI boxes at submission | `AUTHORSHIP_ORCID_CHECKLIST.md` (2 boxes) |
+| B2 | CLOSED 2026-09-15 | Author details integrated 2026-09-02; final-approval and no-COI attestations confirmed by the author in session 2026-09-15 | — |
 | B3 | CLOSED 2026-09-02 | Ported to the official IEEE Open Journals class (ieeetj.cls, author-supplied Template Selector zip); compiles clean at 10 of 12 pages; see ../../v2/ | — |
-| B4 | MAJOR | No public repo / archival DOI; single-environment reproduction | Publish per `RELEASE_MANIFEST.md`; Zenodo/IEEE DataPort DOI; second-platform reproduction log; insert URLs |
+| B4 | PARTIALLY CLOSED | Public repo LIVE since 2026-09-02: github.com/chitralabs/legacycrm-bench (tag v0.1, clean credential scan, URL in both manuscripts). Second-platform reproduction DONE 2026-09-15 (Linux CI, run 35020703092, continuous on every push; 08_supplementary_material/SECOND_PLATFORM_REPRODUCTION.md). Remaining: archival DOI only (author's Zenodo toggle) |
 | B5 | MAJOR | Five unverified journal facts (page-limit hardness, abstract limit, EiC, template class, AI-form field) | Confirm via pages/contacts in `OJCS_CURRENT_REQUIREMENTS.md` §UNVERIFIED |
 | B7 | MAJOR | Independent human re-derivation audit of a ground-truth sample (reviewer BM-02) | Sample-based re-derivation; archive in `09_peer_review_audit/` |
-| B8 | MINOR | Cover letter and disclosure now complete; author sign-off at submission | Sign-off only |
+| B8 | CLOSED 2026-09-15 | Cover letter + AI-use disclosure complete; author sign-off recorded | — |
 | B9 | MINOR | APC decision ($2,160 list 2026; CS-member discount; waivers pubs-waivers@computer.org) | Author decision; re-verify APC |
 
 Closed since the last report: **B1** (evaluation executed, independently verified, reported;
