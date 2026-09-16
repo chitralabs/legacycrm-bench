@@ -1,0 +1,20 @@
+{
+  "title": "LegacyCRM-Bench: A Reproducible Benchmark for Evaluating LLM-Assisted Migration of Enterprise CRM Customizations",
+  "upload_type": "software",
+  "version": "v0.1.1",
+  "creators": [
+    {
+      "name": "Ganesan, Chitrapradha",
+      "orcid": "0009-0009-1305-1724"
+    }
+  ],
+  "license": "MIT",
+  "description": "Benchmark, evaluation harness, executed model-evaluation logs, and manuscript artifact for LegacyCRM-Bench. Code is licensed MIT; data and specifications are licensed CC BY 4.0 (see repository LICENSE files). Concept DOI 10.5281/zenodo.22777518; version DOI 10.5281/zenodo.22777519.",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/chitralabs/legacycrm-bench/tree/v0.1.1",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
+}
