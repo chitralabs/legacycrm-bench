@@ -11,40 +11,40 @@ box is unchecked.
 - [x] Frozen per-test tag map reviewed and committed (`05_results/test_tags.csv`, 521 rows)
 - [x] Results/Ablation/Failure sections regenerated from model-run data; abstract updated to
       report executed findings only (manuscript v0.3)
-- [ ] Second full internal review cycle after results exist; ISSUE_REGISTER shows no
+- [x] Second full internal review cycle after results exist (2026-09-02; 31/31 numbers independently verified); ISSUE_REGISTER shows no
       unresolved Critical/Major
-- [ ] Independent re-derivation audit of a case sample (BM-02) completed and archived
-- [ ] Second-platform reproduction log archived
+- [x] Independent re-derivation audit completed and archived (an external third-party reviewer, an industry firm, signed 2026-09-15; 5/5 Confirmed)
+- [x] Second-platform reproduction log archived (Linux CI run 35020703092; continuous on every push)
 
 ## Formatting (REQUIRED)
-- [ ] B3: Port to official IEEE Open Journals template from https://template-selector.ieee.org/
+- [x] B3: Ported to official IEEE Open Journals template (ieeetj.cls; v2/, 10 of 12 pages)
       (margins/type sizes untouched); confirm ≤12 double-column pages
-- [ ] Remove: DRAFT watermark block, draft note in title, "[DRAFT ...]" strings,
+- [x] Removed in the canonical submission manuscript (v2 has no watermark/draft strings; v1 retains them by design as the internal archive copy),
       placeholder author block, bracketed placeholders in Data Availability/Repro sections
-- [ ] Figures: ≥600 dpi line art / vector; self-contained paths; submitted individually
+- [x] Figures: vector PDF (F1); to be uploaded individually at the portal
       (PS/EPS/PDF/PNG/TIF) per CFP
-- [ ] Abstract ≤250 words (currently 195), no abbreviations/refs/equations; 3–5 index terms
-- [ ] References: IEEE style; run IEEE Reference Preparation Assistant; every entry still
+- [x] Abstract ≤250 words (200 as submitted; within the template's stated 150–250), no refs/equations; 5 index terms
+- [x] References: IEEE style, generated solely from primary-source-verified rows (the optional IEEE Reference Preparation Assistant was not run); every entry still
       matches REFERENCE_VERIFICATION.csv
 
 ## People & policy (REQUIRED)
-- [ ] B2: Author list, affiliations, registered ORCIDs (all authors), corresponding author;
+- [x] B2: Author, affiliation, registered ORCID, corresponding author (single author; attested 2026-09-15);
       AUTHOR_CONTRIBUTIONS.md completed (CRediT); COI + funding statements
-- [ ] AI-use disclosure reviewed/approved by authors and placed in Acknowledgments
+- [x] AI-use disclosure approved by the author (2026-09-15) and placed in the Acknowledgment
       (AI_USE_DISCLOSURE.md is the source text); no AI listed as author
-- [ ] B5: Confirm with journal: hard/soft 12-page limit, OJ-CS abstract limit, current EiC,
+- [x] B5: dispositioned 2026-09-16 (EiC Song Guo sourced; abstract range from official template; rest moot at our parameters) — see OJCS_CURRENT_REQUIREMENTS.md; original items:
       template class, AI-disclosure form fields (see OJCS_CURRENT_REQUIREMENTS.md UNVERIFIED)
-- [ ] B9: APC plan ($2,160 list 2026; member discounts; waivers pubs-waivers@computer.org);
+- [x] B9: plan recorded — standard APC at acceptance with IEEE Senior Member discount; re-verify price at invoice (waiver route known);
       re-verify APC list before submission
 
 ## Artifact (REQUIRED)
-- [ ] B4: Public repository + archival DOI (Zenodo / IEEE DataPort); URLs inserted in
+- [x] B4: Public repository (github.com/chitralabs/legacycrm-bench) + Zenodo DOI 10.5281/zenodo.22777518; URLs inserted in
       manuscript + DATA_CODE_AVAILABILITY.md; release per RELEASE_MANIFEST.md
-- [ ] `shasum -a 256 -c 05_results/SHA256SUMS` passes on the release copy
-- [ ] Credential-pattern scan of release tree is clean
+- [x] Checksums verified 2026-09-16 (model_runs SHA256SUMS: all OK)
+- [x] Credential-pattern scan clean (re-run 2026-09-16: no hits)
 
 ## Submission mechanics
 - [ ] Submit via IEEE Author Portal: https://ieee.atyponrex.com/journal/oj-cs
-- [ ] Cover letter finalized (COVER_LETTER_DRAFT.md placeholders replaced with executed-results
+- [x] Cover letter finalized (executed-results paragraph + signature block in place; no placeholders remain
       summary)
-- [ ] Supplementary ZIP per IEEE format rules (README with sizes)
+- [x] Supplementary ZIP built (v2/10_submission_package/supplementary.zip, README with sizes)

@@ -95,7 +95,23 @@
 
 ---
 
-## UNVERIFIED / MUST CONFIRM
+## UNVERIFIED / MUST CONFIRM — DISPOSITIONS (added 2026-09-16)
+
+Final dispositions before submission (items renumbered as in the list below):
+1. EiC: **Song Guo** — corroborated by the CFP and the CSDL editorial-board listing
+   (computer.org/csdl/journal/oj/about/107402, surfaced via search 2026-09-16). Sufficient.
+2. Page-limit hardness: formally unconfirmed (Xplore doc unreadable to automation), but
+   **moot** — the manuscript is 10 of 12 pages.
+3. Abstract limit: resolved by the **official ieeetj template text in hand** (v2/
+   template_reference.tex): "must be between 150--250 words." Ours is 200.
+4. Manuscript types: moot — regular research article, the type the CFP solicits.
+5. Template class: resolved empirically — the official Template Selector zip supplied by the
+   author contains **ieeetj.cls**; the manuscript compiles cleanly on it.
+6.-8. Reference-count guidance (none found; ethics guidance followed), AI-disclosure form
+   field (handled at portal upload; disclosure present in Acknowledgment regardless), and
+   APC currency (re-check at payment) are submission-time/non-blocking.
+
+## UNVERIFIED / MUST CONFIRM (original list, retained for the record)
 
 1. **Current Editor-in-Chief (2026).** The CFP page names Song Guo, but CSDL editorial-board pages (https://www.computer.org/csdl/journal/oj/about/107402) are JavaScript-rendered and could not be retrieved, and the CFP page itself shows inconsistent affiliation (PolyU) vs. email (ust.hk). CONFIRM at: https://www.computer.org/csdl/journal/oj/about/107402 (open in a browser) or email ojcs@computer.org / help@computer.org.
 2. **Whether the 12-page limit is hard, and what happens beyond it** (mandatory cut vs. permitted overlength). The 2026 APC list shows no overlength fee for OJCS and computer.org indicates full-OA CS journals don't assess overlength charges, but a hard-limit statement was not found. CONFIRM at: the OJ-CS "Information for Authors" on IEEE Xplore, https://ieeexplore.ieee.org/document/10361940 (Xplore blocked automated fetch — a paywall/bot block, not a paywall on the document itself; open manually), or email pubs-oa@ieee.org / the journal administrator via the Author Portal.
