@@ -10,6 +10,9 @@ from pathlib import Path
 
 import matplotlib
 matplotlib.use("Agg")
+# IEEE PDF requirement: embed TrueType (Type 42), never Type 3 bitmap fonts
+matplotlib.rcParams["pdf.fonttype"] = 42
+matplotlib.rcParams["ps.fonttype"] = 42
 import matplotlib.pyplot as plt
 
 V1 = Path(__file__).resolve().parent.parent.parent

@@ -13,7 +13,7 @@ half-up boundary in SCR-01; the DELETE soft-deletable rule in RBC-01; literal-st
 `<set>` values in WFL-01; the 77-character layout and half-up cents conversion in INT-02).
 All matched.
 
-**Status of B7:** CLOSED 2026-09-15 (human attestation completed below); previously PARTIALLY satisfied — the derivation-independence property holds
+**Status of B7:** CONDITIONALLY CLOSED (wording corrected 2026-09-16): human-reviewed-and-signed AI-assisted spot-check; personal re-derivation by the signer is not documented and is not claimed. Previously PARTIALLY satisfied — the derivation-independence property holds
 (specs-only derivation, 5/5 concordant), but the human attestation below must be completed
 to close the item. Until then the manuscript's Threats statement ("spot-audited") remains
 the operative claim.
@@ -80,14 +80,16 @@ Across five cases from five distinct behavioral categories, the expected values 
 
 ## Human attestation (required to close B7)
 
-COMPLETED 2026-09-15 via a signed verification record (archived alongside this file):
+COMPLETED 2026-09-15 as **human review and signed attestation** of this AI-assisted
+spot-check (wording corrected 2026-09-16 by the Phase-3 integrity audit; see
+v4/HUMAN_VERIFICATION_INTEGRITY_AUDIT.md):
 
-- Reviewer: **an external third-party reviewer** — independent third party (an industry firm;
-  [email redacted for privacy]), not an author of this work.
-- Method: per the record, re-derived each of the five cases' expected values from the target
-  specifications and legacy artifacts with tests and reference implementations excluded,
-  then compared with the recorded GROUND_TRUTH files.
-- Decisions: all five cases marked **Confirmed** (none Corrected / Unable to confirm);
-  no amendments.
-- Date: September 15, 2026. Signature: on file — `B7_attestation_signed.pdf`
-  (signature page); full record: `B7_verification_record.docx` / `.txt`.
+- Reviewer of record: **an external third-party reviewer** — third party (an industry firm), not an
+  author of this work.
+- What the records establish: he reviewed and signed a verification record containing the
+  five AI-assisted derivations, with all five decisions marked Confirmed and no amendments.
+  The records do NOT document a personal re-derivation by the signer; the derivations
+  themselves were produced with tests/references excluded and were mechanically re-verified
+  against the recorded ground truth at archive time.
+- Date: September 15, 2026. Signature: on file in the private archive
+  (`B7_attestation_signed.pdf`; full record `B7_verification_record.docx`/`.txt`).

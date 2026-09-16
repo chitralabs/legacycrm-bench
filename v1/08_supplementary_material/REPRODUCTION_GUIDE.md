@@ -63,6 +63,12 @@ shasum -a 256 -c 05_results/model_runs/SHA256SUMS   # verify raw-log integrity
 
 The C5 transpiler baseline IS rerunnable end-to-end at zero cost:
 `.venv/bin/python 03_source_code/runner/transpiler_c5.py --out-root /tmp/c5_repro`.
-Sandbox verification: `.venv/bin/python 03_source_code/runner/probe.py` (7/7 checks). Note: all archived results were
-produced on a single environment (macOS arm64, Python 3.14.2); an independent second-platform
-reproduction is an open release task (see SUBMISSION_BLOCKERS.md).
+Sandbox verification: `.venv/bin/python 03_source_code/runner/probe.py` (7/7 checks).
+
+The independent second-platform reproduction has been COMPLETED: the repository's Linux
+continuous-integration workflow (ubuntu, Python 3.13) reproduces seed bytes, case
+validation, per-test reference/null outcomes, per-mutant kill outcomes, and byte-identical
+regeneration of all tables/macros/bibliography on every push; the archived first run is
+documented in `SECOND_PLATFORM_REPRODUCTION.md`. Model runs remain non-rerunnable
+bit-for-bit (provider nondeterminism) and are verified by comparison against the archived
+raw logs.
